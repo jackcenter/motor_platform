@@ -1,7 +1,7 @@
 #include <ArduinoJson.h>
 #include <Encoder.h>
 #include "src/core_task.h"
-#include "src/actuators/motor.h"
+#include "src/hardware/tb6612fng.h"
 #include "src/config/hardware_config.h"
 #include "src/config/hardware_limits.h"
 
@@ -17,11 +17,13 @@ const config::HardwareLimits hardware_limits{config::loadHardwareLimits()};
 Encoder enc_1{pin_assignment.encoder_1_a_pin, pin_assignment.encoder_1_b_pin};
 Encoder enc_2{pin_assignment.encoder_2_a_pin, pin_assignment.encoder_2_b_pin};
 
-actuators::MotorOptions motor_options{
-    pin_assignment.motor_b_pwm_pin, pin_assignment.motor_b_input_1_pin,
-    pin_assignment.motor_b_input_2_pin, pin_assignment.motor_standby_pin,
-    hardware_limits.motor_b_pwm_range};
-actuators::Motor motor{motor_options};
+hardware::Tb6612fngOptions tb6612fng_options;
+tb6612fng_options.PWMB = pin_assignment.motor_b_pwm_pin;
+tb6612fng_options.BIN2 = pin_assignment.motor_b_input_2_pin;
+tb6612fng_options.BIN1 = pin_assignment.motor_b_input_1_pin;
+tb6612fng_options.STBY = pin_assignment.standby_pin;
+
+hardware::Tb6612fng tb6612fng{ tb6612fng_options };
 
 bool led_level = LOW;
 bool motor_level = LOW;
@@ -41,7 +43,7 @@ void setup()
 
   digitalWrite(pin_assignment.led_pin, led_level);
 
-  motor.open();
+  tb6612fng.open();
 
   Serial.begin(9600);
 }
@@ -59,7 +61,7 @@ void loop()
   //  {
   //    motor.write(LOW, LOW, 255);
   //  }
-  motor.write(LOW, LOW, 255);
+  tb6612fng.write(LOW, LOW, 255);
 
   State test_state;
   test_state.count_A = enc_1.read();
