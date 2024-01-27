@@ -17,13 +17,13 @@ Tb6612fng::Tb6612fng(const Tb6612fngOptions& options) : options_{ options }
   pinMode(options_.AIN2, OUTPUT);
   pinMode(options_.PWMA, OUTPUT);
 
-  analogWrite(options_.PWMB, 255);
+  analogWrite(options_.PWMB, options_.pwm_range.second);
   digitalWrite(options_.BIN2, LOW);
   digitalWrite(options_.BIN1, LOW);
   digitalWrite(options_.STBY, LOW);
   digitalWrite(options_.AIN1, LOW);
   digitalWrite(options_.AIN2, LOW);
-  analogWrite(options_.PWMA, 255);
+  analogWrite(options_.PWMA, opions_.pwm_range.second);
 }
 
 void Tb6612fng::open() const
@@ -48,7 +48,7 @@ types::Status Tb6612fng::write(const types::Channel channel, const bool input_1,
 		return types::Status::UNAVAILABLE;
 	}
 
-  if (pwm_value < 0 || 255 < pwm_value)
+  if (pwm_value < options_.pwm_range.first || options_.pwm_range.second < pwm_value)
   {
     return types::Status::OUT_OF_RANGE;
   }

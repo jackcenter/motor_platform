@@ -18,6 +18,8 @@ struct Tb6612fngOptions
   uint8_t AIN1;
   uint8_t AIN2;
   uint8_t PWMA;
+  std::pair<uint8_t,uint8_t> pwm_range{ 0, 255 };
+  std::pair<double,double> voltage_range{ 0.0, 5.0 };
 };
 
 class Tb6612fng
@@ -32,7 +34,6 @@ public:
 
 private:
   Tb6612fngOptions options_;
-  std::pair<uint8_t,uint8_t> pwm_range{ 0, 255 };
 };
 }
 

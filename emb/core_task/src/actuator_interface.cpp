@@ -1,5 +1,8 @@
 #include "actuator_interface.h"
 
+#include <unordered_map>
+#include <utility>
+
 #include "hardware/tb6612fng.h"
 #include "types/common.h"
 #include "types/input.h"
@@ -15,12 +18,19 @@ types::Status ActuatorInterace::operator()(const types::Input& input) const
 {
   // verify voltage is withing range
 
-  // map voltage sign to motor direction
-  const double pwm_value{ static_cast<int>(utilities::remap<double>(input.voltage, 0.0, 5.0, 0.0, 255.0)) };
+  static std::unordered_map<int,std::pair<bool,bool>> input_map
+  {
+    {-1, {true, false}},
+    {0, {false, true}},
+    {1, {false, true}}
+  };
 
+  const std::pair<bool,bool> input_pair{ input_map(utilities::getSign(input.voltage)) };
+  
   // remap voltage to pwm range
+  const int pwm_value{ (utilities::remap<double,int>(std::abs(input.voltage), 0.0, 5.0, 0, 255)) };
 
-  tb6612fng_.write(types::Channel::B, true, false, pwm_value);  
+  tb6612fng_.write(types::Channel::B, input_pair.first, input_pair.second, pwm_value);  
   return types::Status::OKAY;
 }
 
