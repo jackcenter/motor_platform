@@ -25,15 +25,15 @@ Tb6612fng::Tb6612fng(const Tb6612fngOptions& options) : options_{ options }
 
 void Tb6612fng::open()
 {
-	digitalWrite(options_.standby_pin, HIGH);
+	digitalWrite(options_.STBY, HIGH);
 }
 
 void Tb6612fng::close()
 {
-	digitalWrite(options_.standby_pin, LOW);
+	digitalWrite(options_.STBY, LOW);
 }
 
-uint Tb6612fng::read() const
+uint8_t Tb6612fng::read() const
 {
 	return digitalRead(options_.STBY); 
 }
@@ -45,7 +45,7 @@ StatusTypes Tb6612fng::write(const Channel channel, const bool input_1, const bo
 		return StatusTypes::UNAVAILABLE;
 	}
 
-  if (std::abs(pwm_value) > 255)
+  if (pwm_value < 0 || 255 < pwm_value)
   {
     return StatusTypes::OUT_OF_RANGE;
   }
@@ -55,12 +55,12 @@ StatusTypes Tb6612fng::write(const Channel channel, const bool input_1, const bo
 		case Channel::A:
 			digitalWrite(options_.AIN1, input_1);
 			digitalWrite(options_.AIN2, input_2);
-			analogWrite(options_.PWMA, pwm_value);
+			analogWrite(options_.PWMA, static_cast<uint8_t>(pwm_value));
 			return StatusTypes::OKAY;
 		case Channel::B:
 			digitalWrite(options_.BIN1, input_1);
 			digitalWrite(options_.BIN2, input_2);
-			analogWrite(options_.PWMB, pwm_value);
+			analogWrite(options_.PWMB, static_cast<uint8_t>(pwm_value));
 			return StatusTypes::OKAY;
 		default:
 			return StatusTypes::UNKNOWN;
