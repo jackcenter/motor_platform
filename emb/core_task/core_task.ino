@@ -57,19 +57,21 @@ int main()
 
   for(;;)
   {
-    types::Input input{};
-    input.voltage = 2.0;
+ 
+      if (motor_level)
+      {
+        types::Input input{};
+        input.voltage = 2.0;
+        types::Status status { actuator_interface(input) };
+      }
+      else
+      {
+        types::Input input{};
+        input.voltage = 0.0;
+        types::Status status { actuator_interface(input) };
+      }
 
-    //  if (motor_level)
-    //  {
-    //    motor.write(HIGH, LOW, 100);
-    //  }
-    //  else
-    //  {
-    //    motor.write(LOW, LOW, 255);
-    //  }
-
-    types::Status status { actuator_interface(input) };
+    
 
     State test_state;
     test_state.count_A = enc_1.read();
