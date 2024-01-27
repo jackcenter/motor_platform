@@ -4,17 +4,11 @@
 #include <stdint.h>
 #include <utility>
 
+#include "../types/common.h"
+#include "../types/status.h"
+
 namespace hardware
 {
-enum Channel { A, B };
-
-enum StatusTypes { 
-  OKAY,
-  OUT_OF_RANGE,
-  UNAVAILABLE,
-  UNKNOWN
-};
-
 struct Tb6612fngOptions
 {
   uint8_t PWMB;
@@ -29,12 +23,12 @@ struct Tb6612fngOptions
 class Tb6612fng
 {
 public:
-  Tb6612fng(const Tb6612fngOptions& options);
+  explicit Tb6612fng(const Tb6612fngOptions& options);
   
-  void open();
-  void close();
+  void open() const;
+  void close() const;
   uint8_t read() const;
-  StatusTypes write(const Channel channel, const bool input_1, const bool input_2, const int pwm_value) const;
+  types::Status write(const types::Channel channel, const bool input_1, const bool input_2, const int pwm_value) const;
 
 private:
   Tb6612fngOptions options_;

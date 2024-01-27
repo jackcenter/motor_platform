@@ -1,12 +1,15 @@
+#include "src/core_task.h"
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <Encoder.h>
 
-#include "src/core_task.h"
-#include "src/hardware/tb6612fng.h"
+#include "src/actuator_interface.h"
 #include "src/config/hardware_config.h"
 #include "src/config/hardware_limits.h"
+#include "src/hardware/tb6612fng.h"
+#include "src/types/input.h"
+#include "src/types/status.h"
 
 struct State
 {
@@ -30,6 +33,11 @@ int main()
 
   hardware::Tb6612fng tb6612fng{ tb6612fng_options };
 
+  ActuatorInterfaceOptions actuator_interface_options{};
+  actuator_interface_options.voltage_range = { -5.0, 5.0 };
+
+  ActuatorInterace actuator_interface{ tb6612fng, actuator_interface_options };
+
   // initialize the digital pin as an output.
   pinMode(pin_assignment.encoder_1_a_pin, INPUT_PULLUP);
   pinMode(pin_assignment.encoder_1_b_pin, INPUT_PULLUP);
@@ -40,7 +48,7 @@ int main()
   enc_1.write(0);
   enc_2.write(0);
 
-  tb6612fng.open();
+  actuator_interface.activate();
 
   Serial.begin(9600);
 
@@ -49,7 +57,8 @@ int main()
 
   for(;;)
   {
-    digitalWrite(pin_assignment.led_pin, led_level);
+    types::Input input{};
+    input.voltage = 2.0;
 
     //  if (motor_level)
     //  {
@@ -59,7 +68,8 @@ int main()
     //  {
     //    motor.write(LOW, LOW, 255);
     //  }
-    tb6612fng.write(hardware::Channel::B, LOW, LOW, 255);
+
+    types::Status status { actuator_interface(input) };
 
     State test_state;
     test_state.count_A = enc_1.read();
