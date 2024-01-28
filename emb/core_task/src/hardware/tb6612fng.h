@@ -32,6 +32,8 @@ public:
   uint8_t read() const;
   types::Status write(const types::Channel channel, const bool input_1, const bool input_2, const int pwm_value) const;
 
+  const Tb6612fngOptions& getOptions() const;
+
 private:
   Tb6612fngOptions options_;
 };

@@ -1,5 +1,7 @@
 #include "src/core_task.h"
 
+#include <unordered_map>
+
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <Encoder.h>
@@ -53,25 +55,27 @@ int main()
   Serial.begin(9600);
 
   bool led_level = LOW;
-  bool motor_level = LOW;
+  int motor_level = 0;
 
   for(;;)
   {
- 
-      if (motor_level)
-      {
-        types::Input input{};
-        input.voltage = 2.0;
-        types::Status status { actuator_interface(input) };
-      }
-      else
-      {
-        types::Input input{};
-        input.voltage = 0.0;
-        types::Status status { actuator_interface(input) };
-      }
+    static std::unordered_map<int,double> motor_voltage_map{
+      {0, 0.0},
+      {1, 2.0},
+      {2, 4.0},
+      {3, 2.0},
+      {4, 0.0},
+      {5, -2.0},
+      {6, -4.0},
+      {7, -2.0}
+    };
 
-    
+    types::Input input{};
+    input.voltage = motor_voltage_map[ motor_level % 8 ];
+    Serial.println(motor_level % 8);
+    Serial.println(input.voltage);
+    types::Status result { actuator_interface(input) };
+    Serial.println(result);
 
     State test_state;
     test_state.count_A = enc_1.read();
@@ -85,7 +89,7 @@ int main()
     Serial.println();
 
     led_level = led_level ? LOW : HIGH;
-    motor_level = motor_level ? LOW : HIGH;
+    ++motor_level;
     delay(1000); // wait for a second
     yield();
   }

@@ -23,7 +23,7 @@ Tb6612fng::Tb6612fng(const Tb6612fngOptions& options) : options_{ options }
   digitalWrite(options_.STBY, LOW);
   digitalWrite(options_.AIN1, LOW);
   digitalWrite(options_.AIN2, LOW);
-  analogWrite(options_.PWMA, opions_.pwm_range.second);
+  analogWrite(options_.PWMA, options_.pwm_range.second);
 }
 
 void Tb6612fng::open() const
@@ -70,4 +70,8 @@ types::Status Tb6612fng::write(const types::Channel channel, const bool input_1,
 	}
 }
 
+const Tb6612fngOptions& Tb6612fng::getOptions() const
+{
+  return options_;
+}
 }
