@@ -8,21 +8,19 @@
 #include "types/input.h"
 #include "types/status.h"
 
-struct ActuatorInterfaceOptions
-{
-  std::pair<double,double> voltage_range;
+struct ActuatorInterfaceOptions {
+  std::pair<double, double> voltage_range;
 };
 
-class ActuatorInterace
-{
-public:
+class ActuatorInterace {
+ public:
   ActuatorInterace(const hardware::Tb6612fng& tb6612fng, const ActuatorInterfaceOptions& options);
 
   types::Status operator()(const types::Input& input) const;
   void activate() const;
   void deactivate() const;
 
-private:
+ private:
   hardware::Tb6612fng tb6612fng_;
   ActuatorInterfaceOptions options_;
 };

@@ -5,11 +5,9 @@
 #include "hardware/quadrature_encoder.h"
 #include "types/measurement.h"
 
-SensorInterface::SensorInterface(hardware::QuadratureEncoder& encoder_1, hardware::QuadratureEncoder& encoder_2, const SensorInterfaceOptions& options)
-: encoder_1_{ std::move(encoder_1) }
-, encoder_2_{ std::move(encoder_2) }
-, options_{ options } 
-{
+SensorInterface::SensorInterface(hardware::QuadratureEncoder& encoder_1, hardware::QuadratureEncoder& encoder_2,
+                                 const SensorInterfaceOptions& options)
+    : encoder_1_{std::move(encoder_1)}, encoder_2_{std::move(encoder_2)}, options_{options} {
   encoder_1_.open();
   encoder_2_.open();
 }

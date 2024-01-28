@@ -7,10 +7,8 @@
 #include "../types/common.h"
 #include "../types/status.h"
 
-namespace hardware
-{
-struct Tb6612fngOptions
-{
+namespace hardware {
+struct Tb6612fngOptions {
   uint8_t PWMB;
   uint8_t BIN2;
   uint8_t BIN1;
@@ -18,15 +16,14 @@ struct Tb6612fngOptions
   uint8_t AIN1;
   uint8_t AIN2;
   uint8_t PWMA;
-  std::pair<uint8_t,uint8_t> pwm_range{ 0, 255 };
-  std::pair<double,double> voltage_range{ 0.0, 5.0 };
+  std::pair<uint8_t, uint8_t> pwm_range{0, 255};
+  std::pair<double, double> voltage_range{0.0, 5.0};
 };
 
-class Tb6612fng
-{
-public:
+class Tb6612fng {
+ public:
   explicit Tb6612fng(const Tb6612fngOptions& options);
-  
+
   void open() const;
   void close() const;
   uint8_t read() const;
@@ -34,9 +31,9 @@ public:
 
   const Tb6612fngOptions& getOptions() const;
 
-private:
+ private:
   Tb6612fngOptions options_;
 };
-}
+}  // namespace hardware
 
 #endif  // HARDWARE_TB6612FNG_H

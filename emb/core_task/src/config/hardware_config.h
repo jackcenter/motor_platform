@@ -4,10 +4,8 @@
 #include <stdint.h>
 #include <utility>
 
-namespace config
-{
-struct PinAssignment
-{ 
+namespace config {
+struct PinAssignment {
   uint8_t encoder_1_a_pin;
   uint8_t encoder_1_b_pin;
   uint8_t encoder_2_a_pin;
@@ -20,5 +18,5 @@ struct PinAssignment
 };
 
 PinAssignment loadPinAssignment();
-}
+}  // namespace config
 #endif  // CORE_TASK_CONFIG_HARDWARE_CONFIG_H

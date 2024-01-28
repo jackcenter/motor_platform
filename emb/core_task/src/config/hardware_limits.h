@@ -3,13 +3,11 @@
 
 #include <utility>
 
-namespace config
-{
-struct HardwareLimits
-{
-   std::pair<int,int> motor_b_pwm_range;
+namespace config {
+struct HardwareLimits {
+  std::pair<int, int> motor_b_pwm_range;
 };
 
 HardwareLimits loadHardwareLimits();
-}  // config
+}  // namespace config
 #endif  // CORE_TASK_CONFIG_HARDWARE_LIMITS_H

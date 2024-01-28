@@ -4,14 +4,12 @@
 #include "hardware/quadrature_encoder.h"
 #include "types/measurement.h"
 
-struct SensorInterfaceOptions
-{
-};
+struct SensorInterfaceOptions {};
 
-class SensorInterface
-{
-public:
-  SensorInterface(hardware::QuadratureEncoder& encoder_1, hardware::QuadratureEncoder& encoder_2, const SensorInterfaceOptions& options);
+class SensorInterface {
+ public:
+  SensorInterface(hardware::QuadratureEncoder& encoder_1, hardware::QuadratureEncoder& encoder_2,
+                  const SensorInterfaceOptions& options);
 
   types::Measurement operator()();
 

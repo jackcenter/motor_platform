@@ -1,4 +1,4 @@
 #ifndef test
 #define test
 
-#endif // test
+#endif  // test

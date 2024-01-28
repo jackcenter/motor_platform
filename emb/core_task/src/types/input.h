@@ -3,13 +3,11 @@
 
 #include "header.h"
 
-namespace types
-{
-struct Input
-{
+namespace types {
+struct Input {
   Header header;
   double voltage;
 };
-}  // types
+}  // namespace types
 
 #endif  // TYPES_INPUT_H

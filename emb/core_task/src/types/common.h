@@ -1,9 +1,8 @@
 #ifndef TYPES_COMMON_H
 #define TYPES_COMMON_H
 
-namespace types
-{
+namespace types {
 enum Channel { A, B };
-}  // types
+}  // namespace types
 
 #endif  // TYPES_COMMON_H

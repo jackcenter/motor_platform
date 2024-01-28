@@ -1,9 +1,7 @@
 #include "hardware_config.h"
 
-namespace config
-{
-PinAssignment loadPinAssignment()
-{
+namespace config {
+PinAssignment loadPinAssignment() {
   PinAssignment pin_assignment;
   pin_assignment.encoder_1_a_pin = 8;
   pin_assignment.encoder_1_b_pin = 9;
@@ -14,7 +12,7 @@ PinAssignment loadPinAssignment()
   pin_assignment.motor_b_input_1_pin = 15;
   pin_assignment.motor_b_input_2_pin = 16;
   pin_assignment.motor_standby_pin = 17;
-  
+
   return pin_assignment;
 }
-}
+}  // namespace config

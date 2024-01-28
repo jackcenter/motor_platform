@@ -3,13 +3,11 @@
 
 #include "timestamp.h"
 
-namespace types
-{
-struct Header
-{
+namespace types {
+struct Header {
   unsigned int sequence;
   Timestamp timestamp;
 };
-}  // types
+}  // namespace types
 
 #endif  // TYPES_HEADER_H

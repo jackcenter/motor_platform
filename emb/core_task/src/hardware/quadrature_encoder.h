@@ -5,17 +5,14 @@
 
 #include <Encoder.h>
 
-namespace hardware
-{
-struct QuadratureEncoderOptions
-{
+namespace hardware {
+struct QuadratureEncoderOptions {
   uint8_t CH_A;
   uint8_t CH_B;
 };
 
-class QuadratureEncoder
-{
-public:
+class QuadratureEncoder {
+ public:
   explicit QuadratureEncoder(const QuadratureEncoderOptions& options);
 
   void open();
@@ -24,10 +21,10 @@ public:
 
   const QuadratureEncoderOptions& getOptions() const;
 
-private:
+ private:
   QuadratureEncoderOptions options_;
   Encoder encoder_;
 };
-}
+}  // namespace hardware
 
 #endif  // HARDWARE_QUADRATURE_ENCODER_H
