@@ -1,16 +1,19 @@
+
 #include "src/core_task.h"
 
 #include <unordered_map>
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include <Encoder.h>
 
 #include "src/actuator_interface.h"
 #include "src/config/hardware_config.h"
 #include "src/config/hardware_limits.h"
 #include "src/hardware/tb6612fng.h"
+#include "src/hardware/quadrature_encoder.h"
+#include "src/sensor_interface.h"
 #include "src/types/input.h"
+#include "src/types/measurement.h"
 #include "src/types/status.h"
 
 struct State
@@ -24,8 +27,18 @@ int main()
   const config::PinAssignment pin_assignment{config::loadPinAssignment()};
   const config::HardwareLimits hardware_limits{config::loadHardwareLimits()};
 
-  Encoder enc_1{pin_assignment.encoder_1_a_pin, pin_assignment.encoder_1_b_pin};
-  Encoder enc_2{pin_assignment.encoder_2_a_pin, pin_assignment.encoder_2_b_pin};
+  hardware::QuadratureEncoderOptions encoder_1_options{};
+  encoder_1_options.CH_A = pin_assignment.encoder_1_a_pin;
+  encoder_1_options.CH_B = pin_assignment.encoder_1_b_pin;
+  hardware::QuadratureEncoder encoder_1{ encoder_1_options };
+
+  hardware::QuadratureEncoderOptions encoder_2_options{};
+  encoder_2_options.CH_A = pin_assignment.encoder_2_a_pin;
+  encoder_2_options.CH_B = pin_assignment.encoder_2_b_pin;
+  hardware::QuadratureEncoder encoder_2{ encoder_2_options };
+  
+  SensorInterfaceOptions sensor_interface_options{};
+  SensorInterface sensor_interface{ encoder_1, encoder_2, sensor_interface_options};
 
   hardware::Tb6612fngOptions tb6612fng_options;
   tb6612fng_options.PWMB = pin_assignment.motor_b_pwm_pin;
@@ -40,15 +53,7 @@ int main()
 
   ActuatorInterace actuator_interface{ tb6612fng, actuator_interface_options };
 
-  // initialize the digital pin as an output.
-  pinMode(pin_assignment.encoder_1_a_pin, INPUT_PULLUP);
-  pinMode(pin_assignment.encoder_1_b_pin, INPUT_PULLUP);
-  pinMode(pin_assignment.encoder_2_a_pin, INPUT_PULLUP);
-  pinMode(pin_assignment.encoder_2_b_pin, INPUT_PULLUP);
   pinMode(pin_assignment.led_pin, OUTPUT);
-
-  enc_1.write(0);
-  enc_2.write(0);
 
   actuator_interface.activate();
 
@@ -72,18 +77,15 @@ int main()
 
     types::Input input{};
     input.voltage = motor_voltage_map[ motor_level % 8 ];
-    Serial.println(motor_level % 8);
-    Serial.println(input.voltage);
-    types::Status result { actuator_interface(input) };
-    Serial.println(result);
 
-    State test_state;
-    test_state.count_A = enc_1.read();
-    test_state.count_B = enc_2.read();
+    types::Status result { actuator_interface(input) };
+    // TODO: check the result
+
+    types::Measurement measurement{ sensor_interface() };
 
     JsonDocument doc;
-    doc["count_A"] = test_state.count_A;
-    doc["count_B"] = test_state.count_B;
+    doc["encoder_1_pos"] = measurement.encoder_1_pos;
+    doc["encoder_2_pos"] = measurement.encoder_2_pos;
 
     serializeJson(doc, Serial);
     Serial.println();
