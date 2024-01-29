@@ -30,9 +30,6 @@ types::Status ActuatorInterace::operator()(const types::Input& input) const {
       std::abs(input.voltage), tb6612fng_.getOptions().voltage_range.first,
       tb6612fng_.getOptions().voltage_range.second, tb6612fng_.getOptions().pwm_range.first,
       tb6612fng_.getOptions().pwm_range.second))};
-  Serial.println(input_pair.first);
-  Serial.println(input_pair.second);
-  Serial.println(pwm_value);
 
   tb6612fng_.write(types::Channel::B, input_pair.first, input_pair.second, pwm_value);
   return types::Status::OKAY;

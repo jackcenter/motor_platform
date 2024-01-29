@@ -8,8 +8,8 @@ struct SensorInterfaceOptions {};
 
 class SensorInterface {
  public:
-  SensorInterface(hardware::QuadratureEncoder& encoder_1, hardware::QuadratureEncoder& encoder_2,
-                  const SensorInterfaceOptions& options);
+  SensorInterface(const hardware::QuadratureEncoderOptions& encoder_1_options,
+                  const hardware::QuadratureEncoderOptions& encoder_2_options, const SensorInterfaceOptions& options);
 
   types::Measurement operator()();
 

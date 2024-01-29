@@ -4,7 +4,7 @@
 namespace types {
 struct Timestamp {
   unsigned long int seconds;
-  unsigned long int nano_seconds;
+  unsigned long int nanoseconds;
 };
 }  // namespace types
 

@@ -15,6 +15,7 @@
 #include "src/types/input.h"
 #include "src/types/measurement.h"
 #include "src/types/status.h"
+#include "src/utilities/serialize.h"
 
 struct State
 {
@@ -30,15 +31,15 @@ int main()
   hardware::QuadratureEncoderOptions encoder_1_options{};
   encoder_1_options.CH_A = pin_assignment.encoder_1_a_pin;
   encoder_1_options.CH_B = pin_assignment.encoder_1_b_pin;
-  hardware::QuadratureEncoder encoder_1{ encoder_1_options };
 
   hardware::QuadratureEncoderOptions encoder_2_options{};
   encoder_2_options.CH_A = pin_assignment.encoder_2_a_pin;
   encoder_2_options.CH_B = pin_assignment.encoder_2_b_pin;
-  hardware::QuadratureEncoder encoder_2{ encoder_2_options };
   
   SensorInterfaceOptions sensor_interface_options{};
-  SensorInterface sensor_interface{ encoder_1, encoder_2, sensor_interface_options};
+  SensorInterface sensor_interface{ encoder_1_options, 
+                                    encoder_2_options,
+                                    sensor_interface_options};
 
   hardware::Tb6612fngOptions tb6612fng_options;
   tb6612fng_options.PWMB = pin_assignment.motor_b_pwm_pin;
@@ -83,11 +84,14 @@ int main()
 
     types::Measurement measurement{ sensor_interface() };
 
-    JsonDocument doc;
-    doc["encoder_1_pos"] = measurement.encoder_1_pos;
-    doc["encoder_2_pos"] = measurement.encoder_2_pos;
+    JsonDocument doc1{};
+    doc1["input"] = utilities::serialize(input);
+    serializeJson(doc1, Serial);
+    Serial.println();
 
-    serializeJson(doc, Serial);
+    JsonDocument doc2{};
+    doc2["measurement"] = utilities::serialize(measurement);
+    serializeJson(doc2, Serial);
     Serial.println();
 
     led_level = led_level ? LOW : HIGH;
