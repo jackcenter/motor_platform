@@ -1,0 +1,14 @@
+name: Format
+
+on: [push]
+
+jobs:
+  clang-format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install clang-format
+      run: sudo apt-get install clang-format
+    - name: Check for clang-format differences
+      run: bash ${PWD}/.github/workflows/format.sh

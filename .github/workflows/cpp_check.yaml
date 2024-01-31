@@ -1,0 +1,15 @@
+name: Cpp Check
+
+on: [push]
+
+jobs:
+  clang-format:
+    name: Cpp Check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install cppcheck
+      run: sudo apt install cppcheck
+    - name: Run cppcheck
+      run: bash ${PWD}/.github/workflows/cpp_check.sh
+
