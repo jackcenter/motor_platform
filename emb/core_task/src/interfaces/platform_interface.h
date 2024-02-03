@@ -6,6 +6,7 @@
 #include "../types/measurement.h"
 #include "../types/status.h"
 
+namespace interfaces {
 struct PlatformInterfaceOptions {};
 
 class PlatformInterface {
@@ -23,5 +24,6 @@ class PlatformInterface {
   interfaces::SensorInterface sensor_interface_;
   PlatformInterfaceOptions options_;
 };
+}  // namespace interfaces
 
 #endif  // INTERFACES_PLATFORM_INTERFACE

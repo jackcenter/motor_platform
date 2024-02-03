@@ -7,6 +7,7 @@
 #include "platform_interface.h"
 #include "sensor_interface.h"
 
+namespace interfaces {
 // cppcheck-suppress unusedFunction
 PlatformInterface PlatformInterfaceJsonProvider::provide(const JsonDocument& doc) const {
   const config::PinAssignment pin_assignment{config::loadPinAssignment()};
@@ -43,3 +44,4 @@ PlatformInterface PlatformInterfaceJsonProvider::provide(const JsonDocument& doc
   const PlatformInterfaceOptions platform_interface_options{};
   return PlatformInterface{actuator_interface, sensor_interface, platform_interface_options};
 }
+}  // namespace interfaces

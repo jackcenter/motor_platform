@@ -6,6 +6,7 @@
 #include "../types/measurement.h"
 #include "../types/status.h"
 
+namespace interfaces {
 PlatformInterface::PlatformInterface(const interfaces::ActuatorInterace& actuator_interface,
                                      interfaces::SensorInterface& sensor_interface,
                                      const PlatformInterfaceOptions& options)
@@ -28,3 +29,4 @@ types::Status PlatformInterface::write(const types::Input& input) {
 
   return types::Status::OKAY;
 }
+}  // namespace interfaces
