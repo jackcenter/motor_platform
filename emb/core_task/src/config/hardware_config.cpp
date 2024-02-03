@@ -12,6 +12,9 @@ PinAssignment loadPinAssignment() {
   pin_assignment.motor_b_input_1_pin = 15;
   pin_assignment.motor_b_input_2_pin = 16;
   pin_assignment.motor_standby_pin = 17;
+  pin_assignment.motor_a_input_1_pin = 0;
+  pin_assignment.motor_a_input_2_pin = 0;
+  pin_assignment.motor_a_pwm_pin = 0;
 
   return pin_assignment;
 }

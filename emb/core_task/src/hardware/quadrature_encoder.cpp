@@ -10,6 +10,12 @@ QuadratureEncoder::QuadratureEncoder(const QuadratureEncoderOptions& options)
   pinMode(options_.CH_B, INPUT_PULLUP);
 }
 
+// QuadratureEncoder::QuadratureEncoder(QuadratureEncoder& other)
+//     : options_{other.getOptions()}, encoder_{Encoder(options_.CH_A, options_.CH_B)} {}
+
+QuadratureEncoder::QuadratureEncoder(QuadratureEncoder&& other)
+    : options_{other.getOptions()}, encoder_{Encoder(options_.CH_A, options_.CH_B)} {}
+
 void QuadratureEncoder::open() { write(0); }
 
 long int QuadratureEncoder::read() { return encoder_.read(); }

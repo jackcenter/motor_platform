@@ -15,6 +15,11 @@ class QuadratureEncoder {
  public:
   explicit QuadratureEncoder(const QuadratureEncoderOptions& options);
 
+  // Not an actual copy constructor, moves the encoder to the new object. It is set up like this for convinience.
+  QuadratureEncoder(QuadratureEncoder& other) = delete;
+  QuadratureEncoder(QuadratureEncoder&& other);
+  ~QuadratureEncoder() = default;
+
   void open();
   long int read();
   void write(const long int val);

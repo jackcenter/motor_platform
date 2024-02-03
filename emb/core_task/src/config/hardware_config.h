@@ -15,6 +15,9 @@ struct PinAssignment {
   uint8_t motor_b_input_1_pin;
   uint8_t motor_b_input_2_pin;
   uint8_t motor_standby_pin;
+  uint8_t motor_a_input_1_pin;
+  uint8_t motor_a_input_2_pin;
+  uint8_t motor_a_pwm_pin;
 };
 
 PinAssignment loadPinAssignment();

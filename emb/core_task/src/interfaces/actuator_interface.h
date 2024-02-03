@@ -1,13 +1,14 @@
-#ifndef ACTUATOR_INTERFACE_H
-#define ACTUATOR_INTERFACE_H
+#ifndef INTERFACE_ACTUATOR_INTERFACE_H
+#define INTERFACE_ACTUATOR_INTERFACE_H
 
 #include <utility>
 
-#include "hardware/tb6612fng.h"
-#include "types/common.h"
-#include "types/input.h"
-#include "types/status.h"
+#include "../hardware/tb6612fng.h"
+#include "../types/common.h"
+#include "../types/input.h"
+#include "../types/status.h"
 
+namespace interfaces {
 struct ActuatorInterfaceOptions {
   std::pair<double, double> voltage_range;
 };
@@ -24,5 +25,5 @@ class ActuatorInterace {
   hardware::Tb6612fng tb6612fng_;
   ActuatorInterfaceOptions options_;
 };
-
-#endif  // ACTUATOR_INTERFACE_H
+}  // namespace interfaces
+#endif  // INTERFAC_ACTUATOR_INTERFACE_H

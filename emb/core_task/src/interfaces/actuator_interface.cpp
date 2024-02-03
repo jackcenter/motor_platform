@@ -6,12 +6,13 @@
 #include <unordered_map>
 #include <utility>
 
-#include "hardware/tb6612fng.h"
-#include "types/common.h"
-#include "types/input.h"
-#include "types/status.h"
-#include "utilities/common.h"
+#include "../hardware/tb6612fng.h"
+#include "../types/common.h"
+#include "../types/input.h"
+#include "../types/status.h"
+#include "../utilities/common.h"
 
+namespace interfaces {
 ActuatorInterace::ActuatorInterace(const hardware::Tb6612fng& tb6612fng, const ActuatorInterfaceOptions& options)
     : tb6612fng_{tb6612fng}, options_{options} {}
 
@@ -25,7 +26,6 @@ types::Status ActuatorInterace::operator()(const types::Input& input) const {
 
   const std::pair<bool, bool> input_pair{input_map[utilities::getSign(input.voltage)]};
 
-  // TODO: fix this, it's always 0
   const int pwm_value{(utilities::remap<double, int>(
       std::abs(input.voltage), tb6612fng_.getOptions().voltage_range.first,
       tb6612fng_.getOptions().voltage_range.second, tb6612fng_.getOptions().pwm_range.first,
@@ -38,3 +38,4 @@ types::Status ActuatorInterace::operator()(const types::Input& input) const {
 void ActuatorInterace::activate() const { tb6612fng_.open(); }
 
 void ActuatorInterace::deactivate() const { tb6612fng_.close(); }
+}  // namespace interfaces
