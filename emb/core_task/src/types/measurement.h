@@ -10,4 +10,5 @@ struct Measurement {
   long int encoder_2_pos;
 };
 }  // namespace types
+
 #endif  // TYPES_MESSUREMENT_H

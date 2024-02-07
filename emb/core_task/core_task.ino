@@ -9,6 +9,7 @@
 #include "src/config/platform_interface_config.h"
 #include "src/interfaces/platform_interface.h"
 #include "src/interfaces/platform_interface_json_provider.h"
+#include "src/interfaces/state_estimation_interface.h"
 #include "src/types/status.h"
 #include "src/utilities/serialize.h"
 
@@ -17,7 +18,10 @@ int main() {
   interfaces::PlatformInterfaceJsonProvider platform_interface_json_provider{};
   interfaces::PlatformInterface platform_interface{platform_interface_json_provider.provide(config)};
 
-  applications::Teleop teleop_application{platform_interface};
+  interfaces::StateEstimationInterfaceOptions state_estimation_interface_options{};
+  interfaces::StateEstimationInterface state_estimation_interface{state_estimation_interface_options};
+
+  applications::Teleop teleop_application{platform_interface, state_estimation_interface};
 
   bool led_level = false;
 
