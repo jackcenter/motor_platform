@@ -1,0 +1,16 @@
+name: Unit Test
+
+on: [push]
+
+jobs:
+  clang-format:
+    name: Unit Test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install cmake
+      run: sudo apt-get install cmake
+    - name: Install gtest
+      run: sudo apt install libgtest-dev
+    - name: Run unit tests
+      run: bash ${PWD}/.github/workflows/unit_test.sh
