@@ -9,9 +9,9 @@
 #include "../types/timestamp.h"
 
 namespace utilities {
-JsonDocument serialize(const types::Header& header);
-JsonDocument serialize(const types::Input& input);
-JsonDocument serialize(const types::Measurement& measurement);
-JsonDocument serialize(const types::Timestamp& timestamp);
+DynamicJsonDocument serialize(const types::Header& header);
+DynamicJsonDocument serialize(const types::Input& input);
+DynamicJsonDocument serialize(const types::Measurement& measurement);
+DynamicJsonDocument serialize(const types::Timestamp& timestamp);
 }  // namespace utilities
 #endif  // UTILITIES_SERIALIZE_H
