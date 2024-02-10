@@ -4,6 +4,7 @@
 #include "../types/input.h"
 #include "../types/measurement.h"
 #include "../types/state.h"
+#include "../types/timestamp.h"
 
 namespace interfaces {
 struct StateEstimationInterfaceOptions {};
@@ -20,6 +21,9 @@ class StateEstimationInterface {
   const StateEstimationInterfaceOptions& getOptions() const;
 
  private:
+  double computeVelocity(const double current_position, const double previous_position,
+                         const types::Timestamp& current_timestamp, const types::Timestamp& previous_timestamp);
+
   types::State state_;
   StateEstimationInterfaceOptions options_;
 };

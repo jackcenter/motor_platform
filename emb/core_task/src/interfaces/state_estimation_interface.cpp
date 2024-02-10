@@ -13,10 +13,24 @@ StateEstimationInterface::StateEstimationInterface(const StateEstimationInterfac
 types::State StateEstimationInterface::read() const { return state_; }
 
 void StateEstimationInterface::write(const types::Input& input, const types::Measurement& measurement) {
-  state_.joint_1_position_rad = measurement.encoder_1_pos;
-  state_.joint_1_velocity_rps = 0.0;
-  state_.joint_2_position_rad = measurement.encoder_2_pos;
-  state_.joint_2_velocity_rps = 0.0;
+  types::State state{};
+  state.header = measurement.header;
+  state.joint_1_position_rad = measurement.encoder_1_pos;  // TODO: convert to radians
+  state.joint_1_velocity_rps = computeVelocity(state.joint_1_position_rad, state_.joint_1_position_rad,
+                                               state.header.timestamp, state_.header.timestamp);
+  state.joint_2_position_rad = measurement.encoder_2_pos;  // TODO: convert to radians
+  state.joint_2_velocity_rps = computeVelocity(state.joint_2_position_rad, state_.joint_2_position_rad,
+                                               state.header.timestamp, state_.header.timestamp);
+
+  state_ = state;
+}
+
+double StateEstimationInterface::computeVelocity(const double current_position, const double previous_position,
+                                                 const types::Timestamp& current_timestamp,
+                                                 const types::Timestamp& previous_timestamp) {
+  // TODO: Check times are okay
+  // TODO: update Timestamp to give time elapsed and some other useful things.
+  return (current_position - previous_position) / 1.0;
 }
 
 const types::State& StateEstimationInterface::getState() const { return state_; }
