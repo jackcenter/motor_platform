@@ -5,6 +5,8 @@ namespace types {
 struct Timestamp {
   unsigned long int seconds;
   unsigned long int nanoseconds;
+
+  double toSeconds() const;
 };
 
 bool operator==(const Timestamp& lhs, const Timestamp& rhs);

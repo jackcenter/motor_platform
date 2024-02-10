@@ -30,7 +30,7 @@ double StateEstimationInterface::computeVelocity(const double current_position, 
                                                  const types::Timestamp& previous_timestamp) {
   // TODO: Check times are okay
   // TODO: update Timestamp to give time elapsed and some other useful things.
-  return (current_position - previous_position) / 1.0;
+  return (current_position - previous_position) / (current_timestamp.toSeconds() - previous_timestamp.toSeconds());
 }
 
 const types::State& StateEstimationInterface::getState() const { return state_; }

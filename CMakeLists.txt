@@ -15,7 +15,9 @@ FetchContent_MakeAvailable(ArduinoJson)
 
 include_directories(emb/core_task/src)
 add_library(${PROJECT_NAME}_lib 
-  emb/core_task/src/utilities/serialize.cpp)
+  emb/core_task/src/types/timestamp.cpp
+  emb/core_task/src/utilities/serialize.cpp
+)
 target_link_libraries(${PROJECT_NAME}_lib ArduinoJson)
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
@@ -32,6 +34,7 @@ function(add_project_gtest test_file_path test_file_prefix)
   add_test(NAME ${test_file_path_underscore}_${test_file_prefix} COMMAND ${test_file_path_underscore}_${test_file_prefix})
 endfunction()
 
+add_project_gtest(emb/core_task/test/types test_timestamp)
 add_project_gtest(emb/core_task/test/utilities test_common)
 add_project_gtest(emb/core_task/test/utilities test_serialize)
 # target_link_libraries(emb_core_task_test_utilities_test_serialize ArduinoJson)
