@@ -57,13 +57,16 @@ TEST(Platform, Construction) { Platform platform{getDefaultPlatform()}; }
 
 TEST(Platform, UpdateMeasurement) {
   Platform platform{getDefaultPlatform()};
-  
+
   ASSERT_EQ(types::Status::OKAY, platform.open());
-  EXPECT_EQ(types::Measurement{}, platform.readMeasurement());
+  EXPECT_EQ(types::Measurement{}, platform.readMeasurement(types::Timestamp{}));
+
+  const types::Measurement default_measurement{ getDefaultMeasurement() };
   ASSERT_EQ(types::Status::OKAY, platform.write(getDefaultMeasurement()));
-  EXPECT_EQ(getDefaultMeasurement(), platform.readMeasurement());
+  EXPECT_EQ(default_measurement, platform.readMeasurement(default_measurement.header.timestamp));
+  
   ASSERT_EQ(types::Status::OKAY, platform.close());
-  EXPECT_EQ(types::Measurement{}, platform.readMeasurement());
+  EXPECT_EQ(types::Measurement{}, platform.readMeasurement(types::Timestamp{}));
 }
 
 TEST(Platform, UpdateInput) {

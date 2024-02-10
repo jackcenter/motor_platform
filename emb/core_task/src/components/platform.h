@@ -19,7 +19,7 @@ class Platform {
   types::Status close();
   types::Status open();
   types::Input readInput() const;
-  types::Measurement readMeasurement() const;
+  types::Measurement readMeasurement(const types::Timestamp& timestamp) const;
   types::Status write(const types::Input& input);
   types::Status write(const types::Measurement& measurement);
 

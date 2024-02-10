@@ -91,9 +91,9 @@ const types::Timestamp& SensorInterface::getTimestamp() const { return timestamp
 
 bool SensorInterface::isActive() const { return active_; }
 
-types::Measurement SensorInterface::read() const {
+types::Measurement SensorInterface::read(const types::Timestamp& timestamp) const {
   types::Measurement measurement;
-  measurement.header.timestamp = timestamp_;
+  measurement.header.timestamp = timestamp;
   measurement.encoder_1_pos = encoder_1_.read();
   measurement.encoder_2_pos = encoder_2_.read();
 
