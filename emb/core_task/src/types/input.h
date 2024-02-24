@@ -8,6 +8,8 @@ struct Input {
   Header header;
   double voltage;
 };
+
+bool operator==(const Input& lhs, const Input& rhs);
 }  // namespace types
 
 #endif  // TYPES_INPUT_H

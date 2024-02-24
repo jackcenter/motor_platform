@@ -20,6 +20,8 @@ struct Tb6612fngOptions {
   std::pair<double, double> voltage_range{0.0, 5.0};
 };
 
+bool operator==(const Tb6612fng& lhs, const Tb6612fng& rhs);
+
 class Tb6612fng {
  public:
   explicit Tb6612fng(const Tb6612fngOptions& options);
@@ -34,6 +36,8 @@ class Tb6612fng {
  private:
   Tb6612fngOptions options_;
 };
+
+bool operator==(const Tb6612fng& lhs, const Tb6612fng& rhs);
 }  // namespace hardware
 
 #endif  // HARDWARE_TB6612FNG_H

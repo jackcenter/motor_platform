@@ -7,6 +7,8 @@
 #include "../types/status.h"
 
 namespace interfaces {
+bool operator==(const PlatformInterfaceOptions& lhs, const PlatformInterfaceOptions& rhs) { return true; }
+
 PlatformInterface::PlatformInterface(const interfaces::ActuatorInterace& actuator_interface,
                                      interfaces::SensorInterface& sensor_interface,
                                      const PlatformInterfaceOptions& options)
@@ -29,4 +31,12 @@ types::Status PlatformInterface::write(const types::Input& input) {
 
   return types::Status::OKAY;
 }
+
+const ActuatorInterace& PlatformInterface::getActuatorInterface() const {return actuator_interface_};
+
+const SensorInterface& PlatformInterface::getSensorInterface() const {return sensor_interface_};
+
+const PlatformInterfaceOptions& PlatformInterface::getOptions() const {return options_};
+
+bool operator==(const PlatformInterface& lhs, const PlatformInterface& rhs) { return lhs. }
 }  // namespace interfaces

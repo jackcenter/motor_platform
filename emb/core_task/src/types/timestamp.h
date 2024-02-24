@@ -6,6 +6,8 @@ struct Timestamp {
   unsigned long int seconds;
   unsigned long int nanoseconds;
 };
+
+bool operator==(const Timestamp& lhs, const Timestamp& rhs);
 }  // namespace types
 
 #endif  // TYPES_TIMESTAMP_H

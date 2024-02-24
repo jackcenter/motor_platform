@@ -3,6 +3,7 @@
 #include <Arduino.h>
 
 #include <cmath>
+#include <tuple>
 #include <unordered_map>
 #include <utility>
 
@@ -13,6 +14,10 @@
 #include "../utilities/common.h"
 
 namespace interfaces {
+bool operator==(const ActuatorInterfaceOptions& lhs, const ActuatorInterfaceOptions& rhs) {
+  return lhs.voltage_range == rhs.voltage_range;
+}
+
 ActuatorInterace::ActuatorInterace(const hardware::Tb6612fng& tb6612fng, const ActuatorInterfaceOptions& options)
     : tb6612fng_{tb6612fng}, options_{options} {}
 
@@ -38,4 +43,12 @@ types::Status ActuatorInterace::operator()(const types::Input& input) const {
 void ActuatorInterace::activate() const { tb6612fng_.open(); }
 
 void ActuatorInterace::deactivate() const { tb6612fng_.close(); }
+
+const hardware::Tb6612fng& ActuatorInterace::getTb6612fng() const { return tb6612fng_; }
+
+const ActuatorInterfaceOptions& ActuatorInterace::getOptions() const { return options_; }
+
+bool operator==(const ActuatorInterace& lhs, const ActuatorInterace& rhs) {
+  return std::tuple(lhs.getTb6612fng(), lhs.getOptions()) == std::tuple(rhs.getTb6612fng(), rhs.getOptions());
+}
 }  // namespace interfaces
