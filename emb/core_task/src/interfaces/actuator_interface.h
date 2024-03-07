@@ -13,6 +13,8 @@ struct ActuatorInterfaceOptions {
   std::pair<double, double> voltage_range;
 };
 
+bool operator==(const ActuatorInterfaceOptions& lhs, const ActuatorInterfaceOptions& rhs);
+
 class ActuatorInterace {
  public:
   ActuatorInterace(const hardware::Tb6612fng& tb6612fng, const ActuatorInterfaceOptions& options);
@@ -21,9 +23,14 @@ class ActuatorInterace {
   void activate() const;
   void deactivate() const;
 
+  const hardware::Tb6612fng& getTb6612fng() const;
+  const ActuatorInterfaceOptions& getOptions() const;
+
  private:
   hardware::Tb6612fng tb6612fng_;
   ActuatorInterfaceOptions options_;
 };
+
+bool operator==(const ActuatorInterace& lsh, const ActuatorInterace& rhs);
 }  // namespace interfaces
 #endif  // INTERFAC_ACTUATOR_INTERFACE_H

@@ -1,11 +1,14 @@
 #include "sensor_interface.h"
 
+#include <tuple>
 #include <utility>
 
 #include "../hardware/quadrature_encoder.h"
 #include "../types/measurement.h"
 
 namespace interfaces {
+bool operator==(const SensorInterfaceOptions& lhs, const SensorInterfaceOptions& rhs) { return true; }
+
 SensorInterface::SensorInterface(hardware::QuadratureEncoder&& encoder_1, hardware::QuadratureEncoder&& encoder_2,
                                  const SensorInterfaceOptions& options)
     : encoder_1_{std::move(encoder_1)}, encoder_2_{std::move(encoder_2)}, options_{options} {
@@ -24,4 +27,12 @@ types::Measurement SensorInterface::operator()() {
 
   return measurement;
 }
+
+const hardware::QuadratureEncoder& SensorInterface::getEncoder1() const { return encoder_1_; }
+
+const hardware::QuadratureEncoder& SensorInterface::getEncoder2() const { return encoder_2_; }
+
+const SensorInterfaceOptions& SensorInterface::getOptions() const { return options_; }
+
+bool operator==(const SensorInterface& lhs, const SensorInterface& rhs) { return std::tuple(l) }
 }  // namespace interfaces

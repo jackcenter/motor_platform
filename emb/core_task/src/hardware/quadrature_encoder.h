@@ -11,6 +11,8 @@ struct QuadratureEncoderOptions {
   uint8_t CH_B;
 };
 
+bool operator==(const QuadratureEncoderOptions& lhs, const QuadratureEncoderOptions& rhs);
+
 class QuadratureEncoder {
  public:
   explicit QuadratureEncoder(const QuadratureEncoderOptions& options);

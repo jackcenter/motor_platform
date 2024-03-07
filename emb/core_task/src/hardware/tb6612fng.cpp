@@ -1,11 +1,19 @@
 #include "tb6612fng.h"
 
+#include <tuple>
+
 #include <Arduino.h>
 
 #include "../types/status.h"
 #include "../types/common.h"
 
 namespace hardware {
+bool operator==(const Tb6612fngOptions& lhs, const Tb6612fngOptions& rhs) {
+  return std::tuple(lhs.AIN1, lhs.AIN2, lhs.BIN1, lhs.BIN2, lhs.pwm_range, lhs.PWMA, lhs.PWMB, lhs.STBY,
+                    lhs.voltage_range) == std::tuple(rhs.AIN1, rhs.AIN2, rhs.BIN1, rhs.BIN2, rhs.pwm_range, rhs.PWMA,
+                                                     rhs.PWMB, rhs.STBY, rhs.voltage_range);
+}
+
 Tb6612fng::Tb6612fng(const Tb6612fngOptions& options) : options_{options} {
   pinMode(options_.PWMB, OUTPUT);
   pinMode(options_.BIN2, OUTPUT);
@@ -57,4 +65,6 @@ types::Status Tb6612fng::write(const types::Channel channel, const bool input_1,
 }
 
 const Tb6612fngOptions& Tb6612fng::getOptions() const { return options_; }
+
+bool operator==(const Tb6612fng& lhs, const Tb6612fng& rhs) { return lhs.getOptions() == rhs.getOptions() }
 }  // namespace hardware

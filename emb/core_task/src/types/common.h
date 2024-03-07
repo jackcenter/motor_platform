@@ -4,5 +4,4 @@
 namespace types {
 enum Channel { A, B };
 }  // namespace types
-
 #endif  // TYPES_COMMON_H

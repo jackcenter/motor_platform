@@ -11,6 +11,8 @@ struct State {
   double joint_2_position_rad;
   double joint_2_velocity_rps;
 };
+
+bool operator==(const State& lhs, const State& rhs);
 }  // namespace types
 
 #endif  // TYPES_STATE_H

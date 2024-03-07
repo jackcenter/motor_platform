@@ -9,6 +9,8 @@
 namespace interfaces {
 struct PlatformInterfaceOptions {};
 
+bool operator==(const PlatformInterfaceOptions& lhs, const PlatformInterfaceOptions& rhs);
+
 class PlatformInterface {
  public:
   PlatformInterface(const interfaces::ActuatorInterace& actuator_interface,
@@ -19,11 +21,17 @@ class PlatformInterface {
   types::Measurement read();
   types::Status write(const types::Input& input);
 
+  const ActuatorInterace& getActuatorInterface() const;
+  const SensorInterface& getSensorInterface() const;
+  const PlatformInterfaceOptions& getOptions() const;
+
  private:
-  interfaces::ActuatorInterace actuator_interface_;
-  interfaces::SensorInterface sensor_interface_;
+  ActuatorInterace actuator_interface_;
+  SensorInterface sensor_interface_;
   PlatformInterfaceOptions options_;
 };
+
+bool operator==(const PlatformInterface& lhs, const PlatformInterface& rhs);
 }  // namespace interfaces
 
 #endif  // INTERFACES_PLATFORM_INTERFACE

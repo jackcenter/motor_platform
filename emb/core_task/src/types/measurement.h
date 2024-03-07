@@ -9,6 +9,8 @@ struct Measurement {
   long int encoder_1_pos;
   long int encoder_2_pos;
 };
+
+bool operator==(const Measurement& lhs, const Measurement& rhs);
 }  // namespace types
 
 #endif  // TYPES_MESSUREMENT_H

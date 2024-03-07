@@ -8,6 +8,8 @@ struct Header {
   unsigned int sequence;
   Timestamp timestamp;
 };
+
+bool operator==(const Header& lhs, const Header& rhs);
 }  // namespace types
 
 #endif  // TYPES_HEADER_H
