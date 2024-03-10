@@ -49,6 +49,6 @@ endfunction()
 
 add_project_gtest(emb/core_task/test/applications test_teleop)
 add_project_gtest(emb/core_task/test/components test_platform)
+add_project_gtest(emb/core_task/test/sensors test_quadrature_encoder)
 add_project_gtest(emb/core_task/test/utilities test_common)
 add_project_gtest(emb/core_task/test/utilities test_serialize)
-# target_link_libraries(emb_core_task_test_utilities_test_serialize ArduinoJson)
