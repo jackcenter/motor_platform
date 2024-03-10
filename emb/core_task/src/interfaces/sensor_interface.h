@@ -1,8 +1,9 @@
 #ifndef INTERFACES_SENSOR_INTERFACE_H
 #define INTERFACES_SENSOR_INTERFACE_H
 
-#include "../hardware/quadrature_encoder.h"
+#include "../sensors/quadrature_encoder.h"
 #include "../types/measurement.h"
+#include "../types/status.h"
 
 namespace interfaces {
 struct SensorInterfaceOptions {};
@@ -11,22 +12,19 @@ bool operator==(const SensorInterfaceOptions& lhs, const SensorInterfaceOptions&
 
 class SensorInterface {
  public:
-  SensorInterface(hardware::QuadratureEncoder&& encoder_1, hardware::QuadratureEncoder&& encoder_2,
+  SensorInterface(const sensors::QuadratureEncoder& encoder_1, const sensors::QuadratureEncoder& encoder_2,
                   const SensorInterfaceOptions& options);
 
-  SensorInterface(SensorInterface& other);
-  SensorInterface(SensorInterface&& other) = default;
-  ~SensorInterface() = default;
+  types::Measurement read() const;
+  types::Status write(const types::Measurement measurement);
 
-  types::Measurement operator()();
-
-  const hardware::QuadratureEncoder& getEncoder1() const;
-  const hardware::QuadratureEncoder& getEncoder2() const;
+  const sensors::QuadratureEncoder& getEncoder1() const;
+  const sensors::QuadratureEncoder& getEncoder2() const;
   const SensorInterfaceOptions& getOptions() const;
 
  private:
-  hardware::QuadratureEncoder encoder_1_;
-  hardware::QuadratureEncoder encoder_2_;
+  sensors::QuadratureEncoder encoder_1_;
+  sensors::QuadratureEncoder encoder_2_;
   SensorInterfaceOptions options_;
 };
 

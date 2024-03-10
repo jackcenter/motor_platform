@@ -8,6 +8,8 @@
 #include "../types/status.h"
 
 namespace hardware {
+enum Gear { forward, neutral, reverse };
+
 struct Tb6612fngOptions {
   uint8_t PWMB;
   uint8_t BIN2;
@@ -20,7 +22,7 @@ struct Tb6612fngOptions {
   std::pair<double, double> voltage_range{0.0, 5.0};
 };
 
-bool operator==(const Tb6612fng& lhs, const Tb6612fng& rhs);
+bool operator==(const Tb6612fngOptions& lhs, const Tb6612fngOptions& rhs);
 
 class Tb6612fng {
  public:
@@ -30,10 +32,13 @@ class Tb6612fng {
   void close() const;
   uint8_t read() const;
   types::Status write(const types::Channel channel, const bool input_1, const bool input_2, const int pwm_value) const;
+  types::Status write(const types::Channel, const double voltage);
 
   const Tb6612fngOptions& getOptions() const;
 
  private:
+  Gear getRequiredGear(const double voltage) const;
+
   Tb6612fngOptions options_;
 };
 

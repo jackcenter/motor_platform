@@ -3,31 +3,31 @@
 
 #include <utility>
 
-#include "../hardware/tb6612fng.h"
+#include "../actuators/brushed_motor.h"
 #include "../types/common.h"
 #include "../types/input.h"
 #include "../types/status.h"
 
 namespace interfaces {
-struct ActuatorInterfaceOptions {
-  std::pair<double, double> voltage_range;
-};
+struct ActuatorInterfaceOptions {};
 
 bool operator==(const ActuatorInterfaceOptions& lhs, const ActuatorInterfaceOptions& rhs);
 
 class ActuatorInterace {
  public:
-  ActuatorInterace(const hardware::Tb6612fng& tb6612fng, const ActuatorInterfaceOptions& options);
+  ActuatorInterace(const actuators::BrushedMotor& motor, const ActuatorInterfaceOptions& options);
 
-  types::Status operator()(const types::Input& input) const;
-  void activate() const;
-  void deactivate() const;
+  types::Input read() const;
+  types::Status write(const types::Input& input);
 
-  const hardware::Tb6612fng& getTb6612fng() const;
+  void activate();
+  void deactivate();
+
+  const actuators::BrushedMotor& getMotor() const;
   const ActuatorInterfaceOptions& getOptions() const;
 
  private:
-  hardware::Tb6612fng tb6612fng_;
+  actuators::BrushedMotor motor_;
   ActuatorInterfaceOptions options_;
 };
 

@@ -6,16 +6,15 @@
 #include "../types/status.h"
 
 namespace applications {
-Teleop::Teleop(interfaces::PlatformInterface& platform_interface,
-               const interfaces::StateEstimationInterface& state_estimation_interface)
-    : platform_interface_{platform_interface}, state_estimation_interface_{state_estimation_interface} {}
+Teleop::Teleop(components::Platform& platform, const components::StateEstimation& state_estimation)
+    : platform_{platform}, state_estimation_{state_estimation} {}
 
 // cppcheck-suppress unusedFunction
 types::Status Teleop::cycle() {
-  const types::Measurement measurement{platform_interface_.read()};
+  const types::Measurement measurement{platform_.readMeasurement()};
 
-  state_estimation_interface_.write(state_.input, measurement);
-  const types::State state{state_estimation_interface_.read()};
+  state_estimation_.write(state_.input, measurement);
+  const types::State state{state_estimation_.read()};
 
   // TODO: Move reference generation out of here.
   types::State reference{};
@@ -28,7 +27,7 @@ types::Status Teleop::cycle() {
   types::Input input{};
   input.voltage = 0.001 * error.joint_1_position_rad;
 
-  const types::Status result{platform_interface_.write(input)};
+  const types::Status result{platform_.write(input)};
   if (result != types::Status::OKAY) {
     return result;
   }
@@ -39,6 +38,10 @@ types::Status Teleop::cycle() {
 
   return types::Status::OKAY;
 }
+
+const types::Input Teleop::read() const { return platform_.readInput(); };
+
+types::Status Teleop::write(const types::Measurement& measurement) { return platform_.write(measurement); };
 
 // cppcheck-suppress unusedFunction
 const TeleopState& Teleop::getState() const { return state_; }

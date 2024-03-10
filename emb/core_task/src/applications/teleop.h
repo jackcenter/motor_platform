@@ -1,8 +1,8 @@
 #ifndef APPLICATIONS_TELEOP_H
 #define APPLICATIONS_TELEOP_H
 
-#include "../interfaces/platform_interface.h"
-#include "../interfaces/state_estimation_interface.h"
+#include "../components/platform.h"
+#include "../components/state_estimation.h"
 #include "../types/input.h"
 #include "../types/measurement.h"
 #include "../types/state.h"
@@ -17,14 +17,16 @@ struct TeleopState {
 
 class Teleop {
  public:
-  explicit Teleop(interfaces::PlatformInterface& platform_interface,
-                  const interfaces::StateEstimationInterface& state_estimation_interface);
+  explicit Teleop(components::Platform& platform_interface,
+                  const components::StateEstimation& state_estimation_interface);
   types::Status cycle();
+  const types::Input read() const;
+  types::Status write(const types::Measurement& measurement);
   const TeleopState& getState() const;
 
  private:
-  interfaces::PlatformInterface platform_interface_;
-  interfaces::StateEstimationInterface state_estimation_interface_;
+  components::Platform platform_;
+  components::StateEstimation state_estimation_;
   TeleopState state_{};
 };
 }  // namespace applications

@@ -15,7 +15,22 @@ FetchContent_MakeAvailable(ArduinoJson)
 
 include_directories(emb/core_task/src)
 add_library(${PROJECT_NAME}_lib 
-  emb/core_task/src/utilities/serialize.cpp)
+  emb/core_task/src/actuators/brushed_motor.cpp
+  emb/core_task/src/applications/teleop.cpp
+  emb/core_task/src/components/platform.cpp
+  emb/core_task/src/components/platform_json_provider.cpp
+  emb/core_task/src/components/state_estimation.cpp
+  emb/core_task/src/config/platform_config.cpp
+  emb/core_task/src/interfaces/actuator_interface.cpp
+  emb/core_task/src/interfaces/sensor_interface.cpp
+  emb/core_task/src/sensors/quadrature_encoder.cpp
+  emb/core_task/src/types/header.cpp
+  emb/core_task/src/types/input.cpp
+  emb/core_task/src/types/measurement.cpp
+  emb/core_task/src/types/state.cpp
+  emb/core_task/src/types/timestamp.cpp
+  emb/core_task/src/utilities/serialize.cpp
+)
 target_link_libraries(${PROJECT_NAME}_lib ArduinoJson)
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
@@ -32,6 +47,8 @@ function(add_project_gtest test_file_path test_file_prefix)
   add_test(NAME ${test_file_path_underscore}_${test_file_prefix} COMMAND ${test_file_path_underscore}_${test_file_prefix})
 endfunction()
 
+add_project_gtest(emb/core_task/test/applications test_teleop)
+add_project_gtest(emb/core_task/test/components test_platform)
 add_project_gtest(emb/core_task/test/utilities test_common)
 add_project_gtest(emb/core_task/test/utilities test_serialize)
 # target_link_libraries(emb_core_task_test_utilities_test_serialize ArduinoJson)
