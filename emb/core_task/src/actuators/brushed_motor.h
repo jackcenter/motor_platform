@@ -16,14 +16,13 @@ class BrushedMotor {
  public:
   BrushedMotor(const BrushedMotorOptions& options);
 
-  void open();
-  void close();
-  double read() const;
+  types::Status close();
+  types::Status open();
   types::Status write(const double input);
 
   const BrushedMotorOptions& getOptions() const;
   bool isActive() const;
-  double getInput() const;
+  double read() const;
 
  private:
   BrushedMotorOptions options_;

@@ -47,6 +47,7 @@ function(add_project_gtest test_file_path test_file_prefix)
   add_test(NAME ${test_file_path_underscore}_${test_file_prefix} COMMAND ${test_file_path_underscore}_${test_file_prefix})
 endfunction()
 
+add_project_gtest(emb/core_task/test/actuators test_brushed_motor)
 add_project_gtest(emb/core_task/test/applications test_teleop)
 add_project_gtest(emb/core_task/test/components test_platform)
 add_project_gtest(emb/core_task/test/sensors test_quadrature_encoder)
