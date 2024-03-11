@@ -6,6 +6,7 @@
 #include "../../src/interfaces/actuator_interface.h"
 #include "../../src/interfaces/sensor_interface.h"
 #include "../../src/sensors/quadrature_encoder.h"
+#include "../../src/types/input.h"
 #include "../../src/types/measurement.h"
 
 namespace components {
@@ -31,20 +32,51 @@ Platform getDefaultPlatform() {
   return Platform{actuator_interface, sensor_interface, platform_interface_options};
 }
 
+types::Input getDefaultInput()
+{
+  types::Input input{};
+  input.header.sequence = 0;
+  input.header.timestamp.seconds = 1;
+  input.header.timestamp.nanoseconds = 2;
+  input.voltage = 3.4;
+
+  return input;
+}
+
+types::Measurement getDefaultMeasurement()
+{
+  types::Measurement measurement{};
+  measurement.header.sequence = 0;
+  measurement.header.timestamp.seconds = 1;
+  measurement.header.timestamp.nanoseconds = 2;
+  measurement.encoder_1_pos = -300;
+  measurement.encoder_2_pos = 400;
+
+  return measurement;
+}
+
 TEST(Platform, Construction) { Platform platform{getDefaultPlatform()}; }
 
 TEST(Platform, UpdateMeasurement) {
   Platform platform{getDefaultPlatform()};
+  
+  ASSERT_EQ(types::Status::OKAY, platform.open());
+  EXPECT_EQ(types::Measurement{}, platform.readMeasurement());
+  ASSERT_EQ(types::Status::OKAY, platform.write(getDefaultMeasurement()));
+  EXPECT_EQ(getDefaultMeasurement(), platform.readMeasurement());
+  ASSERT_EQ(types::Status::OKAY, platform.close());
+  EXPECT_EQ(types::Measurement{}, platform.readMeasurement());
+}
 
-  types::Measurement measurement;
-  measurement.header = {};
-  measurement.encoder_1_pos = 100;
-  measurement.encoder_2_pos = -200;
-  types::Status result{platform.write(measurement)};
-  ASSERT_EQ(types::Status::OKAY, result);
-
-  types::Measurement read_measurement{platform.readMeasurement()};
-  EXPECT_EQ(measurement, read_measurement);
+TEST(Platform, UpdateInput) {
+  Platform platform{getDefaultPlatform()};
+  
+  ASSERT_EQ(types::Status::OKAY, platform.open());
+  EXPECT_EQ(types::Input{}, platform.readInput());
+  ASSERT_EQ(types::Status::OKAY, platform.write(getDefaultInput()));
+  EXPECT_EQ(getDefaultInput(), platform.readInput());
+  ASSERT_EQ(types::Status::OKAY, platform.close());
+  EXPECT_EQ(types::Input{}, platform.readInput());
 }
 
 }  // namespace components

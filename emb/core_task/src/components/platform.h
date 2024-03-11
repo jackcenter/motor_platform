@@ -16,8 +16,8 @@ class Platform {
   Platform(const interfaces::ActuatorInterface& actuator_interface, const interfaces::SensorInterface& sensor_interface,
            const PlatformOptions& options);
 
-  void close();
-  void open();
+  types::Status close();
+  types::Status open();
   types::Input readInput() const;
   types::Measurement readMeasurement() const;
   types::Status write(const types::Input& input);

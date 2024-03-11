@@ -15,9 +15,36 @@ Platform::Platform(const interfaces::ActuatorInterface& actuator_interface,
                    const interfaces::SensorInterface& sensor_interface, const PlatformOptions& options)
     : actuator_interface_{actuator_interface}, sensor_interface_{sensor_interface}, options_{options} {}
 
-void Platform::close() { actuator_interface_.close(); }
+types::Status Platform::close() {
+  const types::Status actuator_interface_result{actuator_interface_.close()};
+  const types::Status sensor_interface_result{sensor_interface_.close()};
 
-void Platform::open() { actuator_interface_.open(); }
+  if (types::Status::OKAY != actuator_interface_result) {
+    return actuator_interface_result;
+  }
+
+  if (types::Status::OKAY != sensor_interface_result) {
+    return sensor_interface_result;
+  }
+
+  return types::Status::OKAY;
+}
+
+types::Status Platform::open() {
+  const types::Status actuator_interface_result{actuator_interface_.open()};
+  if (types::Status::OKAY != actuator_interface_result) {
+    close();
+    return actuator_interface_result;
+  }
+
+  const types::Status sensor_interface_result{sensor_interface_.open()};
+  if (types::Status::OKAY != sensor_interface_result) {
+    close();
+    return sensor_interface_result;
+  }
+
+  return types::Status::OKAY;
+}
 
 types::Input Platform::readInput() const { return actuator_interface_.read(); }
 
