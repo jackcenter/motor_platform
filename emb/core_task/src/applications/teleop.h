@@ -15,19 +15,39 @@ struct TeleopState {
   types::State state;
 };
 
+bool operator==(const TeleopState& lhs, const TeleopState& rhs);
+
+bool operator!=(const TeleopState& lhs, const TeleopState& rhs);
+
+struct TeleopOptions {
+  double gain = 0.0;
+};
+
+bool operator==(const TeleopOptions& lhs, const TeleopOptions& rhs);
+
 class Teleop {
  public:
-  explicit Teleop(components::Platform& platform_interface,
-                  const components::StateEstimation& state_estimation_interface);
+  explicit Teleop(const components::Platform& platform_interface, const components::StateEstimation& state_estimation,
+                  const TeleopOptions& options);
+
+  types::Status close();
   types::Status cycle();
-  const types::Input read() const;
+  types::Status open();
   types::Status write(const types::Measurement& measurement);
+
+  const TeleopOptions& getOptions() const;
+  const components::Platform& getPlatform() const;
   const TeleopState& getState() const;
+  const components::StateEstimation& getStateEstimation() const;
+  const types::Input read() const;
 
  private:
   components::Platform platform_;
   components::StateEstimation state_estimation_;
-  TeleopState state_{};
+  TeleopState state_;
+  TeleopOptions options_;
 };
+
+bool operator==(const Teleop& lhs, const Teleop& rhs);
 }  // namespace applications
 #endif  // APPLICATIONS_TELEOP_H
