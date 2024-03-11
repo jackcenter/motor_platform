@@ -25,7 +25,7 @@ Platform getDefaultPlatform() {
   const actuators::BrushedMotor motor{motor_options};
 
   const interfaces::ActuatorInterfaceOptions actuator_interface_options{};
-  const interfaces::ActuatorInterace actuator_interface{motor, actuator_interface_options};
+  const interfaces::ActuatorInterface actuator_interface{motor, actuator_interface_options};
 
   const PlatformOptions platform_interface_options{};
   return Platform{actuator_interface, sensor_interface, platform_interface_options};

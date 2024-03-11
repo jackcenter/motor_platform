@@ -7,30 +7,33 @@
 #include "../types/common.h"
 #include "../types/input.h"
 #include "../types/status.h"
+#include "../types/timestamp.h"
 
 namespace interfaces {
 struct ActuatorInterfaceOptions {};
 
 bool operator==(const ActuatorInterfaceOptions& lhs, const ActuatorInterfaceOptions& rhs);
 
-class ActuatorInterace {
+class ActuatorInterface {
  public:
-  ActuatorInterace(const actuators::BrushedMotor& motor, const ActuatorInterfaceOptions& options);
+  ActuatorInterface(const actuators::BrushedMotor& motor, const ActuatorInterfaceOptions& options);
 
-  types::Input read() const;
+  types::Status open();
+  types::Status close();
   types::Status write(const types::Input& input);
-
-  void activate();
-  void deactivate();
 
   const actuators::BrushedMotor& getMotor() const;
   const ActuatorInterfaceOptions& getOptions() const;
+  bool isActive() const;
+  types::Input read() const;
 
  private:
   actuators::BrushedMotor motor_;
   ActuatorInterfaceOptions options_;
+  bool active_;
+  types::Timestamp timestamp_;
 };
 
-bool operator==(const ActuatorInterace& lsh, const ActuatorInterace& rhs);
+bool operator==(const ActuatorInterface& lsh, const ActuatorInterface& rhs);
 }  // namespace interfaces
 #endif  // INTERFAC_ACTUATOR_INTERFACE_H

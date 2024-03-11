@@ -11,13 +11,13 @@
 namespace components {
 bool operator==(const PlatformOptions& lhs, const PlatformOptions& rhs) { return true; }
 
-Platform::Platform(const interfaces::ActuatorInterace& actuator_interface,
+Platform::Platform(const interfaces::ActuatorInterface& actuator_interface,
                    const interfaces::SensorInterface& sensor_interface, const PlatformOptions& options)
     : actuator_interface_{actuator_interface}, sensor_interface_{sensor_interface}, options_{options} {}
 
-void Platform::close() { actuator_interface_.deactivate(); }
+void Platform::close() { actuator_interface_.close(); }
 
-void Platform::open() { actuator_interface_.activate(); }
+void Platform::open() { actuator_interface_.open(); }
 
 types::Input Platform::readInput() const { return actuator_interface_.read(); }
 
@@ -27,7 +27,7 @@ types::Status Platform::write(const types::Input& input) { return actuator_inter
 
 types::Status Platform::write(const types::Measurement& measurement) { return sensor_interface_.write(measurement); }
 
-const interfaces::ActuatorInterace& Platform::getActuatorInterface() const { return actuator_interface_; }
+const interfaces::ActuatorInterface& Platform::getActuatorInterface() const { return actuator_interface_; }
 
 const interfaces::SensorInterface& Platform::getSensorInterface() const { return sensor_interface_; }
 
