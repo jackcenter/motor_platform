@@ -5,8 +5,8 @@
 
 namespace types {
 struct Header {
-  unsigned int sequence;
-  Timestamp timestamp;
+  unsigned int sequence = 0;
+  Timestamp timestamp{};
 };
 
 bool operator==(const Header& lhs, const Header& rhs);

@@ -5,9 +5,9 @@
 
 namespace types {
 struct Measurement {
-  Header header;
-  long int encoder_1_pos;
-  long int encoder_2_pos;
+  Header header{};
+  long int encoder_1_pos = 0.0;
+  long int encoder_2_pos = 0.0;
 };
 
 bool operator==(const Measurement& lhs, const Measurement& rhs);
