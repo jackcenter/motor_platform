@@ -5,8 +5,8 @@
 
 namespace types {
 struct Input {
-  Header header;
-  double voltage;
+  Header header{};
+  double voltage = 0.0;
 };
 
 bool operator==(const Input& lhs, const Input& rhs);

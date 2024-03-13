@@ -20,26 +20,40 @@ Teleop getDefualtTelop() {
   components::StateEstimationOptions state_estimation_options{};
   components::StateEstimation state_estimation{state_estimation_options};
 
-  return Teleop{platform, state_estimation};
+  TeleopOptions options{};
+  options.gain = 0.001;
+
+  return Teleop{platform, state_estimation, options};
+}
+
+types::Measurement getDefualtMeasurement() {
+  types::Measurement measurement{};
+  measurement.header.sequence = 0;
+  measurement.header.timestamp.seconds = 1;
+  measurement.header.timestamp.nanoseconds = 2;
+  measurement.encoder_1_pos = -300;
+  measurement.encoder_2_pos = 400;
+
+  return measurement;
 }
 
 TEST(Teleop, Construction) { Teleop teleop_application{getDefualtTelop()}; }
 
-TEST(Teleop, Cycle) {
+TEST(Teleop, CycleProvidesCorretInput) {
   Teleop teleop_application{getDefualtTelop()};
 
-  types::Measurement measurement;
-  measurement.header = {};
-  measurement.encoder_1_pos = 100;
-  measurement.encoder_2_pos = -200;
-  teleop_application.write(measurement);
+  ASSERT_EQ(types::Status::OKAY, teleop_application.open());
+  EXPECT_EQ(types::Input{}, teleop_application.read());
 
-  types::Status result{teleop_application.cycle()};
-  ASSERT_EQ(types::Status::OKAY, result);
+  ASSERT_EQ(types::Status::OKAY, teleop_application.write(getDefualtMeasurement()));
+  EXPECT_EQ(types::Input{}, teleop_application.read());
+  EXPECT_EQ(TeleopState{}, teleop_application.getState());
 
-  const types::Input input{teleop_application.read()};
-  const TeleopState state{teleop_application.getState()};
+  ASSERT_EQ(types::Status::OKAY, teleop_application.cycle());
+  EXPECT_NE(TeleopState{}, teleop_application.getState());
 
-  EXPECT_EQ(measurement, state.measurement) << "1: " << state.measurement.encoder_1_pos << " 2: " << state.measurement.encoder_2_pos << "\n";
+  types::Input expected_input{};
+  expected_input.voltage = teleop_application.getOptions().gain * static_cast<double>(-700);
+  EXPECT_EQ(expected_input, teleop_application.read());
 }
 }  // namespace applications

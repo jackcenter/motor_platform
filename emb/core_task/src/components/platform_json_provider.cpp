@@ -26,7 +26,7 @@ Platform PlatformJsonProvider::provide(const JsonDocument& doc) const {
   motor_options.voltage_range.second = doc["platform"]["actuator_interface"]["motor"]["options"]["max_voltage"];
   actuators::BrushedMotor motor{motor_options};
 
-  interfaces::ActuatorInterace actuator_interface{motor, actuator_interface_options};
+  interfaces::ActuatorInterface actuator_interface{motor, actuator_interface_options};
 
   const PlatformOptions platform_interface_options{};
   return Platform{actuator_interface, sensor_interface, platform_interface_options};

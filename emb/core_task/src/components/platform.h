@@ -13,22 +13,22 @@ bool operator==(const PlatformOptions& lhs, const PlatformOptions& rhs);
 
 class Platform {
  public:
-  Platform(const interfaces::ActuatorInterace& actuator_interface, const interfaces::SensorInterface& sensor_interface,
+  Platform(const interfaces::ActuatorInterface& actuator_interface, const interfaces::SensorInterface& sensor_interface,
            const PlatformOptions& options);
 
-  void close();
-  void open();
+  types::Status close();
+  types::Status open();
   types::Input readInput() const;
   types::Measurement readMeasurement() const;
   types::Status write(const types::Input& input);
   types::Status write(const types::Measurement& measurement);
 
-  const interfaces::ActuatorInterace& getActuatorInterface() const;
+  const interfaces::ActuatorInterface& getActuatorInterface() const;
   const interfaces::SensorInterface& getSensorInterface() const;
   const PlatformOptions& getOptions() const;
 
  private:
-  interfaces::ActuatorInterace actuator_interface_;
+  interfaces::ActuatorInterface actuator_interface_;
   interfaces::SensorInterface sensor_interface_;
   PlatformOptions options_;
 };
