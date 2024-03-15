@@ -3,8 +3,7 @@
 
 namespace types {
 struct Timestamp {
-  unsigned long int seconds = 0;
-  unsigned long int nanoseconds = 0;
+  unsigned long int microseconds = 0;
 };
 
 bool operator==(const Timestamp& lhs, const Timestamp& rhs);

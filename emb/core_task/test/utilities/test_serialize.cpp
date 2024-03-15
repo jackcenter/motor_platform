@@ -6,6 +6,7 @@
 #include "../../src/types/header.h"
 #include "../../src/types/input.h"
 #include "../../src/types/measurement.h"
+#include "../../src/types/state.h"
 #include "../../src/types/timestamp.h"
 
 namespace utilities {
@@ -13,8 +14,7 @@ namespace utilities {
 types::Header getDefaultHeader() {
   types::Header header{};
   header.sequence = 1;
-  header.timestamp.seconds = 2;
-  header.timestamp.nanoseconds = 3;
+  header.timestamp.microseconds = 2;
 
   return header;
 }
@@ -24,8 +24,7 @@ TEST(SerializeHeader, ContainsExpectedData) {
   DynamicJsonDocument result{serialize(header)};
 
   EXPECT_TRUE(result["sequence"] == header.sequence);
-  EXPECT_TRUE(result["timestamp"]["seconds"] == header.timestamp.seconds);
-  EXPECT_TRUE(result["timestamp"]["nanoseconds"] == header.timestamp.nanoseconds);
+  EXPECT_TRUE(result["timestamp"]["microseconds"] == header.timestamp.microseconds);
 }
 
 TEST(SerializeInput, ContainsExpectedData) {
@@ -37,8 +36,7 @@ TEST(SerializeInput, ContainsExpectedData) {
 
   EXPECT_TRUE(result["voltage"] == input.voltage);
   EXPECT_TRUE(result["header"]["sequence"] == input.header.sequence);
-  EXPECT_TRUE(result["header"]["timestamp"]["seconds"] == input.header.timestamp.seconds);
-  EXPECT_TRUE(result["header"]["timestamp"]["nanoseconds"] == input.header.timestamp.nanoseconds);
+  EXPECT_TRUE(result["header"]["timestamp"]["microseconds"] == input.header.timestamp.microseconds);
 }
 
 TEST(SerializeMeasurement, ContainsExpectedData) {
@@ -52,18 +50,33 @@ TEST(SerializeMeasurement, ContainsExpectedData) {
   EXPECT_TRUE(result["encoder_1_pos"] == measurement.encoder_1_pos);
   EXPECT_TRUE(result["encoder_2_pos"] == measurement.encoder_2_pos);
   EXPECT_TRUE(result["header"]["sequence"] == measurement.header.sequence);
-  EXPECT_TRUE(result["header"]["timestamp"]["seconds"] == measurement.header.timestamp.seconds);
-  EXPECT_TRUE(result["header"]["timestamp"]["nanoseconds"] == measurement.header.timestamp.nanoseconds);
+  EXPECT_TRUE(result["header"]["timestamp"]["microseconds"] == measurement.header.timestamp.microseconds);
+}
+
+TEST(SerializeState, ContainsExpectedData) {
+types::State state{};
+state.header = getDefaultHeader();
+state.joint_1_position_rad = 0.1;
+state.joint_1_velocity_rps = 1.2;
+state.joint_2_position_rad = 2.3;
+state.joint_2_velocity_rps = 3.4;
+
+DynamicJsonDocument result{serialize(state)};
+
+EXPECT_TRUE(result["joint_1_position_rad"] == state.joint_1_position_rad);
+EXPECT_TRUE(result["joint_1_velocity_rps"] == state.joint_1_velocity_rps);
+EXPECT_TRUE(result["joint_2_position_rad"] == state.joint_2_position_rad);
+EXPECT_TRUE(result["joint_2_velocity_rps"] == state.joint_2_velocity_rps);
+EXPECT_TRUE(result["header"]["sequence"] == state.header.sequence);
+EXPECT_TRUE(result["header"]["timestamp"]["microseconds"] == state.header.timestamp.microseconds);
 }
 
 TEST(SerializeTimestamp, ContainsExpectedData) {
   types::Timestamp timestamp{};
-  timestamp.seconds = 1;
-  timestamp.nanoseconds = 2;
+  timestamp.microseconds = 1;
 
   DynamicJsonDocument result{serialize(timestamp)};
 
-  EXPECT_TRUE(result["seconds"] == timestamp.seconds);
-  EXPECT_TRUE(result["nanoseconds"] == timestamp.nanoseconds);
+  EXPECT_TRUE(result["microseconds"] == timestamp.microseconds);
 }
 }  // namespace utilities

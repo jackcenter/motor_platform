@@ -6,6 +6,7 @@
 #include "../types/measurement.h"
 #include "../types/state.h"
 #include "../types/status.h"
+#include "../types/timestamp.h"
 
 namespace applications {
 bool operator==(const TeleopState& lhs, const TeleopState& rhs) {
@@ -24,10 +25,10 @@ Teleop::Teleop(const components::Platform& platform, const components::StateEsti
 types::Status Teleop::close() { return platform_.close(); }
 
 // cppcheck-suppress unusedFunction
-types::Status Teleop::cycle() {
+types::Status Teleop::cycle(const types::Timestamp& timestamp) {
   const types::Measurement measurement{platform_.readMeasurement()};
 
-  state_estimation_.write(state_.input, measurement);
+  state_estimation_.write(state_.input, measurement, timestamp);
   const types::State state{state_estimation_.read()};
 
   // TODO: Move reference generation out of here.
@@ -39,6 +40,7 @@ types::Status Teleop::cycle() {
   error.joint_1_position_rad = state.joint_1_position_rad - reference.joint_1_position_rad;
 
   types::Input input{};
+  input.header.timestamp = timestamp;
   input.voltage = options_.gain * error.joint_1_position_rad;
 
   const types::Status result{platform_.write(input)};
@@ -47,7 +49,6 @@ types::Status Teleop::cycle() {
   }
 
   state_.input = input;
-
   state_.measurement = measurement;
   state_.state = state;
 

@@ -7,6 +7,7 @@
 #include "../types/measurement.h"
 #include "../types/state.h"
 #include "../types/status.h"
+#include "../types/timestamp.h"
 
 namespace applications {
 struct TeleopState {
@@ -31,7 +32,7 @@ class Teleop {
                   const TeleopOptions& options);
 
   types::Status close();
-  types::Status cycle();
+  types::Status cycle(const types::Timestamp& timestamp);
   types::Status open();
   types::Status write(const types::Measurement& measurement);
 
