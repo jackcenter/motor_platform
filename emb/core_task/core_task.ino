@@ -45,6 +45,7 @@ int main() {
   components::StateEstimation state_estimation{state_estimation_options};
 
   applications::Teleop teleop_application{platform, state_estimation};
+  teleop_application.open();
 
   Serial.begin(9600);
 
@@ -56,8 +57,6 @@ int main() {
     measurement_update.encoder_1_pos = encoder_1.read();
     measurement_update.encoder_2_pos = encoder_2.read();
     teleop_application.write(measurement_update);
-
-    Serial.println(measurement_update.encoder_2_pos);
 
     teleop_application.cycle();
     applications::TeleopState teleop_state{teleop_application.getState()};
