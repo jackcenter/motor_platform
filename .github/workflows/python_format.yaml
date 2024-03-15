@@ -1,0 +1,14 @@
+name: Python Format
+
+on: [push]
+
+jobs:
+  place-hodler:
+    name: Python Format
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install black
+      run: python3 -m pip install black
+    - name: Run formatter
+      run: ./python_format.sh

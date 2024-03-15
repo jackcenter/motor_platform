@@ -11,5 +11,5 @@ jobs:
     - name: Install cppcheck
       run: sudo apt install cppcheck
     - name: Run cppcheck
-      run: bash ${PWD}/cpp_check.sh
+      run: ./cpp_check.sh
 

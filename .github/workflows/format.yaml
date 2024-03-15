@@ -11,4 +11,4 @@ jobs:
     - name: Install clang-format
       run: sudo apt-get install clang-format
     - name: Check for clang-format differences
-      run: bash ${PWD}/format.sh
+      run: ./format.sh
