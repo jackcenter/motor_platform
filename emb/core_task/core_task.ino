@@ -14,6 +14,7 @@
 #include "src/hardware/tb6612fng.h"
 #include "src/types/common.h"
 #include "src/types/status.h"
+#include "src/types/timestamp.h"
 #include "src/utilities/serialize.h"
 
 int main() {
@@ -44,7 +45,10 @@ int main() {
   components::StateEstimationOptions state_estimation_options{};
   components::StateEstimation state_estimation{state_estimation_options};
 
-  applications::Teleop teleop_application{platform, state_estimation};
+  applications::TeleopOptions teleop_options{};
+  teleop_options.gain = 0.001;
+
+  applications::Teleop teleop_application{platform, state_estimation, teleop_options};
   teleop_application.open();
 
   Serial.begin(9600);
@@ -53,16 +57,20 @@ int main() {
     digitalWrite(pin_assignment.led_pin, led_level);
     led_level = led_level ? false : true;
 
-    types::Measurement measurement_update;
+    types::Timestamp current_timestamp{ micros() };
+    
+    types::Measurement measurement_update;  
     measurement_update.encoder_1_pos = encoder_1.read();
     measurement_update.encoder_2_pos = encoder_2.read();
+    measurement_update.header.timestamp = current_timestamp;
+
     teleop_application.write(measurement_update);
-
-    teleop_application.cycle();
-    applications::TeleopState teleop_state{teleop_application.getState()};
-
+    teleop_application.cycle(current_timestamp);
+    
     const types::Input input_update{ teleop_application.read() };
     tb6612fng.write(types::Channel::B, input_update.voltage);
+
+    applications::TeleopState teleop_state{teleop_application.getState()};
 
     JsonDocument doc1{};
     doc1["input"] = utilities::serialize(teleop_state.input);
@@ -72,6 +80,11 @@ int main() {
     JsonDocument doc2{};
     doc2["measurement"] = utilities::serialize(teleop_state.measurement);
     serializeJson(doc2, Serial);
+    Serial.println();
+
+    JsonDocument doc3{};
+    doc3["state"] = utilities::serialize(teleop_state.state);
+    serializeJson(doc3, Serial);
     Serial.println();
 
     delay(2);

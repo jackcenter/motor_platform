@@ -14,7 +14,7 @@ class StateEstimation {
  public:
   explicit StateEstimation(const StateEstimationOptions& options);
   types::State read() const;
-  void write(const types::Input& input, const types::Measurement& measurement);
+  void write(const types::Input& input, const types::Measurement& measurement, const types::Timestamp& timestamp);
 
   const types::State& getState() const;
   const StateEstimationOptions& getOptions() const;

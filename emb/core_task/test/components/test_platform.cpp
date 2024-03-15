@@ -36,8 +36,7 @@ types::Input getDefaultInput()
 {
   types::Input input{};
   input.header.sequence = 0;
-  input.header.timestamp.seconds = 1;
-  input.header.timestamp.nanoseconds = 2;
+  input.header.timestamp.microseconds = 1;
   input.voltage = 3.4;
 
   return input;
@@ -47,8 +46,7 @@ types::Measurement getDefaultMeasurement()
 {
   types::Measurement measurement{};
   measurement.header.sequence = 0;
-  measurement.header.timestamp.seconds = 1;
-  measurement.header.timestamp.nanoseconds = 2;
+  measurement.header.timestamp.microseconds = 1;
   measurement.encoder_1_pos = -300;
   measurement.encoder_2_pos = 400;
 

@@ -25,10 +25,19 @@ DynamicJsonDocument serialize(const types::Measurement& measurement) {
   return doc;
 }
 
+DynamicJsonDocument serialize(const types::State& state) {
+  DynamicJsonDocument doc{1024};
+  doc["header"] = serialize(state.header);
+  doc["joint_1_position_rad"] = state.joint_1_position_rad;
+  doc["joint_1_velocity_rps"] = state.joint_1_velocity_rps;
+  doc["joint_2_position_rad"] = state.joint_2_position_rad;
+  doc["joint_2_velocity_rps"] = state.joint_2_velocity_rps;
+  return doc;
+}
+
 DynamicJsonDocument serialize(const types::Timestamp& timestamp) {
   DynamicJsonDocument doc{1024};
-  doc["seconds"] = timestamp.seconds;
-  doc["nanoseconds"] = timestamp.nanoseconds;
+  doc["microseconds"] = timestamp.microseconds;
   return doc;
 }
 }  // namespace utilities

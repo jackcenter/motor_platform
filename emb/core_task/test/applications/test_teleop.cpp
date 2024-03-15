@@ -10,6 +10,7 @@
 #include "../../src/types/input.h"
 #include "../../src/types/measurement.h"
 #include "../../src/types/status.h"
+#include "../../src/types/timestamp.h"
 
 namespace applications {
 Teleop getDefualtTelop() {
@@ -29,8 +30,7 @@ Teleop getDefualtTelop() {
 types::Measurement getDefualtMeasurement() {
   types::Measurement measurement{};
   measurement.header.sequence = 0;
-  measurement.header.timestamp.seconds = 1;
-  measurement.header.timestamp.nanoseconds = 2;
+  measurement.header.timestamp.microseconds = 1;
   measurement.encoder_1_pos = -300;
   measurement.encoder_2_pos = 400;
 
@@ -49,7 +49,7 @@ TEST(Teleop, CycleProvidesCorretInput) {
   EXPECT_EQ(types::Input{}, teleop_application.read());
   EXPECT_EQ(TeleopState{}, teleop_application.getState());
 
-  ASSERT_EQ(types::Status::OKAY, teleop_application.cycle());
+  ASSERT_EQ(types::Status::OKAY, teleop_application.cycle(types::Timestamp{}));
   EXPECT_NE(TeleopState{}, teleop_application.getState());
 
   types::Input expected_input{};

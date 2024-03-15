@@ -2,7 +2,10 @@
 
 #include <tuple>
 
+#include "../types/input.h"
+#include "../types/measurement.h"
 #include "../types/state.h"
+#include "../types/timestamp.h"
 
 namespace components {
 bool operator==(const StateEstimationOptions& lhs, const StateEstimationOptions& rhs) { return true; }
@@ -11,7 +14,9 @@ StateEstimation::StateEstimation(const StateEstimationOptions& options) : state_
 
 types::State StateEstimation::read() const { return state_; }
 
-void StateEstimation::write(const types::Input& input, const types::Measurement& measurement) {
+void StateEstimation::write(const types::Input& input, const types::Measurement& measurement,
+                            const types::Timestamp& timestamp) {
+  state_.header.timestamp = timestamp;
   state_.joint_1_position_rad = measurement.encoder_1_pos;
   state_.joint_1_velocity_rps = 0.0;
   state_.joint_2_position_rad = measurement.encoder_2_pos;
