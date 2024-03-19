@@ -13,4 +13,4 @@ jobs:
     - name: Install gtest
       run: sudo apt install libgtest-dev
     - name: Run unit tests
-      run: bash ${PWD}/unit_test.sh
+      run: ./unit_test.sh

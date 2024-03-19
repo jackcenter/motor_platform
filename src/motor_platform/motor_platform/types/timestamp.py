@@ -1,9 +1,9 @@
-from typing import NamedTuple
-
-class Timestamp(NamedTuple):
-    microseconds: int 
-
-
-    @staticmethod
-    def decode(json_value):
-        return Timestamp(microseconds=json_value["microseconds"])
+class Timestamp():
+    def __init__(self, microseconds: int):
+        self.microseconds = microseconds
+    
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__dict__ == other.__dict__ 
+        
+        return False

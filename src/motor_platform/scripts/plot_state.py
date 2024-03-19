@@ -4,10 +4,8 @@ import logging
 
 import matplotlib.pyplot as plt
 
-from motor_platform.types.input import Input
-from motor_platform.types.measurement import Measurement
-from motor_platform.types.state import State
-from motor_platform.visualization import plots
+import motor_platform.plots as plots
+import motor_platform.types as types
 
 
 # TODO: Set up tests, set up formatting 
@@ -23,17 +21,17 @@ def main():
     measurement_list = []
     state_list = []
 
-    # TODO: It might be a good idea to have a single message type get published from the hardware
     for message in messages:
         for key, val in message.items():
             if key == "input":
-                input_list.append(Input.decode(val))
+                input_list.append(types.Input(**val))
 
             if key == "measurement":
-                measurement_list.append(Measurement.decode(val))
+                measurement_list.append(types.Measurement(**val))
 
             if key == "state":
-                state_list.append(State.decode(val))
+                print(val)
+                state_list.append(types.State(**val))
 
     reference_errors = [
         datum.joint_2_position_rad - datum.joint_1_position_rad for datum in state_list
