@@ -8,7 +8,7 @@ class Timestamp(NamedTuple):
 class Header(NamedTuple):
     sequence: int
     timestamp: Timestamp
-    
+
 
 class Input(NamedTuple):
     header: Header

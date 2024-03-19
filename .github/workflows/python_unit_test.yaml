@@ -8,8 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Change to package directory
-      run: cd src/motor_platform
     - name: Install build
       run: python3 -m pip install build
     - name: Build motor_platform package

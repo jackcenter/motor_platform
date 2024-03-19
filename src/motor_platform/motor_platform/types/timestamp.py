@@ -1,9 +1,9 @@
-class Timestamp():
+class Timestamp:
     def __init__(self, microseconds: int):
         self.microseconds = microseconds
-    
+
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.__dict__ == other.__dict__ 
-        
+            return self.__dict__ == other.__dict__
+
         return False

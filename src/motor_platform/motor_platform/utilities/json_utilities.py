@@ -17,7 +17,7 @@ class TimestampDecoder(json.JSONDecoder):
 class TimestampEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Timestamp):
-            return {"timestamp":{"microseconds":obj.microseconds}}
+            return {"timestamp": {"microseconds": obj.microseconds}}
 
         return super().default(obj)
 

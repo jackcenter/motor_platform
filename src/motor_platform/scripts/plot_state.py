@@ -8,7 +8,7 @@ import motor_platform.plots as plots
 import motor_platform.types as types
 
 
-# TODO: Set up tests, set up formatting 
+# TODO: Set up tests, set up formatting
 def main():
     args = setup()
     logging.info("Starting...")
