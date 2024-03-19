@@ -1,3 +1,4 @@
 ![ccp check](https://github.com/jackcenter/motor_platform/actions/workflows/cpp_check.yaml/badge.svg) 
 ![format](https://github.com/jackcenter/motor_platform/actions/workflows/format.yaml/badge.svg)
-![format](https://github.com/jackcenter/motor_platform/actions/workflows/unit_test.yaml/badge.svg)
+![unit_test](https://github.com/jackcenter/motor_platform/actions/workflows/unit_test.yaml/badge.svg)
+![python_unit_test](https://github.com/jackcenter/motor_platform/actions/workflows/python_unit_test.yaml/badge.svg)
