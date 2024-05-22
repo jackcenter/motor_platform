@@ -1,3 +1,4 @@
+#include <cmath>
 #include <string>
 #include <utility>
 
@@ -43,10 +44,12 @@ int main() {
   components::Platform platform{platform_json_provider.provide(config)};
 
   components::StateEstimationOptions state_estimation_options{};
+  state_estimation_options.joint_1_rad_per_count = (2.0 * M_PI) / 8400.0;
+  state_estimation_options.joint_2_rad_per_count = (2.0 * M_PI) / 2400.0;
   components::StateEstimation state_estimation{state_estimation_options};
 
   applications::TeleopOptions teleop_options{};
-  teleop_options.gain = 0.001;
+  teleop_options.gain = 1.0;
 
   applications::Teleop teleop_application{platform, state_estimation, teleop_options};
   teleop_application.open();
@@ -87,7 +90,7 @@ int main() {
     serializeJson(doc3, Serial);
     Serial.println();
 
-    delay(2);
+    delay(20);
 
     yield();
   }

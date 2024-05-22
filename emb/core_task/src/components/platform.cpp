@@ -48,7 +48,9 @@ types::Status Platform::open() {
 
 types::Input Platform::readInput() const { return actuator_interface_.read(); }
 
-types::Measurement Platform::readMeasurement() const { return sensor_interface_.read(); }
+types::Measurement Platform::readMeasurement(const types::Timestamp& timestamp) const {
+  return sensor_interface_.read(timestamp);
+}
 
 types::Status Platform::write(const types::Input& input) { return actuator_interface_.write(input); }
 

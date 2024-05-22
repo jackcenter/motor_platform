@@ -1,5 +1,6 @@
 #include "teleop.h"
 
+#include <iostream>
 #include <tuple>
 
 #include "../types/input.h"
@@ -22,13 +23,28 @@ Teleop::Teleop(const components::Platform& platform, const components::StateEsti
                const TeleopOptions& options)
     : platform_{platform}, state_estimation_{state_estimation}, state_{}, options_{options} {}
 
-types::Status Teleop::close() { return platform_.close(); }
+types::Status Teleop::close() {
+  const types::Status platform_status{platform_.close()};
+  const types::Status state_estimation_status{state_estimation_.close()};
+
+  if (platform_status != types::Status::OKAY) {
+    // return UNKOWN here since it won't be clear which component failed to close
+    return types::Status::UNKNOWN;
+  }
+
+  if (state_estimation_status != types::Status::OKAY) {
+    // return UNKOWN here since it won't be clear which component failed to close
+    return types::Status::UNKNOWN;
+  }
+
+  return types::Status::OKAY;
+}
 
 // cppcheck-suppress unusedFunction
 types::Status Teleop::cycle(const types::Timestamp& timestamp) {
-  const types::Measurement measurement{platform_.readMeasurement()};
+  const types::Measurement measurement{platform_.readMeasurement(timestamp)};
 
-  state_estimation_.write(state_.input, measurement, timestamp);
+  state_estimation_.write(measurement);
   const types::State state{state_estimation_.read()};
 
   // TODO: Move reference generation out of here.
@@ -55,7 +71,21 @@ types::Status Teleop::cycle(const types::Timestamp& timestamp) {
   return types::Status::OKAY;
 }
 
-types::Status Teleop::open() { return platform_.open(); }
+types::Status Teleop::open() {
+  const types::Status platform_status{platform_.open()};
+  if (platform_status != types::Status::OKAY) {
+    close();
+    return platform_status;
+  }
+
+  const types::Status state_estimation_status{state_estimation_.open()};
+  if (state_estimation_status != types::Status::OKAY) {
+    close();
+    return state_estimation_status;
+  }
+
+  return types::Status::OKAY;
+}
 
 types::Status Teleop::write(const types::Measurement& measurement) { return platform_.write(measurement); };
 

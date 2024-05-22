@@ -4,6 +4,8 @@
 namespace types {
 struct Timestamp {
   unsigned long int microseconds = 0;
+
+  double toSec() const;
 };
 
 bool operator==(const Timestamp& lhs, const Timestamp& rhs);

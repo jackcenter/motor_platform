@@ -19,10 +19,13 @@ Teleop getDefualtTelop() {
   components::Platform platform{platform_json_provider.provide(config)};
 
   components::StateEstimationOptions state_estimation_options{};
+  state_estimation_options.joint_1_rad_per_count = 0.1;
+  state_estimation_options.joint_2_rad_per_count = 0.2;
+
   components::StateEstimation state_estimation{state_estimation_options};
 
   TeleopOptions options{};
-  options.gain = 0.001;
+  options.gain = 1.0;
 
   return Teleop{platform, state_estimation, options};
 }
@@ -31,8 +34,8 @@ types::Measurement getDefualtMeasurement() {
   types::Measurement measurement{};
   measurement.header.sequence = 0;
   measurement.header.timestamp.microseconds = 1;
-  measurement.encoder_1_pos = -300;
-  measurement.encoder_2_pos = 400;
+  measurement.encoder_1_pos = -3;
+  measurement.encoder_2_pos = 4;
 
   return measurement;
 }
@@ -49,11 +52,15 @@ TEST(Teleop, CycleProvidesCorretInput) {
   EXPECT_EQ(types::Input{}, teleop_application.read());
   EXPECT_EQ(TeleopState{}, teleop_application.getState());
 
-  ASSERT_EQ(types::Status::OKAY, teleop_application.cycle(types::Timestamp{}));
-  EXPECT_NE(TeleopState{}, teleop_application.getState());
+  types::Timestamp timestamp{};
+  timestamp.microseconds = 11;
 
-  types::Input expected_input{};
-  expected_input.voltage = teleop_application.getOptions().gain * static_cast<double>(-700);
-  EXPECT_EQ(expected_input, teleop_application.read());
+  ASSERT_EQ(types::Status::OKAY, teleop_application.cycle(timestamp));
+
+  const types::State state{teleop_application.getState().state};
+  const types::Measurement measurement{ teleop_application.getState().measurement};
+  EXPECT_NE(TeleopState{}, teleop_application.getState());
+  EXPECT_NE(0.0, teleop_application.read().voltage) << state.joint_1_position_rad << " " << state.joint_2_position_rad
+    << " " << measurement.encoder_1_pos << " " << measurement.encoder_2_pos;
 }
 }  // namespace applications

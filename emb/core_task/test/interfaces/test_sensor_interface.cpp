@@ -37,20 +37,20 @@ TEST(SensorInterface, UpdatesCorrectly)
   {
     const types::Status result{sensor_interface.open()};
     ASSERT_EQ(types::Status::OKAY, result) << result;
-    EXPECT_EQ(types::Measurement{}, sensor_interface.read());
+    EXPECT_EQ(types::Measurement{}, sensor_interface.read(types::Timestamp{}));
   }
 
   {
     const types::Measurement measurement{ getDefaultMeasurement()};
     const types::Status result{sensor_interface.write(measurement)};
     ASSERT_EQ(types::Status::OKAY, result) << result;
-    EXPECT_EQ(measurement, sensor_interface.read());
+    EXPECT_EQ(measurement, sensor_interface.read(measurement.header.timestamp));
   }
 
   {
     const types::Status result{sensor_interface.close()};
     ASSERT_EQ(types::Status::OKAY, result) << result;
-    EXPECT_EQ(types::Measurement{}, sensor_interface.read());
+    EXPECT_EQ(types::Measurement{}, sensor_interface.read(types::Timestamp{}));
   }
 }
 

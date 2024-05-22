@@ -30,6 +30,7 @@ add_library(${PROJECT_NAME}_lib
   emb/core_task/src/types/state.cpp
   emb/core_task/src/types/timestamp.cpp
   emb/core_task/src/utilities/serialize.cpp
+  emb/core_task/src/utilities/time.cpp
 )
 target_link_libraries(${PROJECT_NAME}_lib ArduinoJson)
 
@@ -50,8 +51,10 @@ endfunction()
 add_project_gtest(emb/core_task/test/actuators test_brushed_motor)
 add_project_gtest(emb/core_task/test/applications test_teleop)
 add_project_gtest(emb/core_task/test/components test_platform)
+add_project_gtest(emb/core_task/test/components test_state_estimation)
 add_project_gtest(emb/core_task/test/interfaces test_actuator_interface)
 add_project_gtest(emb/core_task/test/interfaces test_sensor_interface)
 add_project_gtest(emb/core_task/test/sensors test_quadrature_encoder)
 add_project_gtest(emb/core_task/test/utilities test_common)
 add_project_gtest(emb/core_task/test/utilities test_serialize)
+add_project_gtest(emb/core_task/test/utilities test_time)

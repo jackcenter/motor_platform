@@ -25,7 +25,7 @@ class SensorInterface {
   const SensorInterfaceOptions& getOptions() const;
   const types::Timestamp& getTimestamp() const;
   bool isActive() const;
-  types::Measurement read() const;
+  types::Measurement read(const types::Timestamp& timestamp) const;
 
  private:
   sensors::QuadratureEncoder encoder_1_;
