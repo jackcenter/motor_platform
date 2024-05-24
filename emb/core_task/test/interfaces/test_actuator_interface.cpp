@@ -9,6 +9,7 @@ namespace interfaces {
 ActuatorInterface getDefaultActuatorInterface()
 {
   actuators::BrushedMotorOptions motor_options{};
+  motor_options.voltage_multiplier = 1.0;
   motor_options.voltage_range.first = -1.0;
   motor_options.voltage_range.second = 2.0;
   actuators::BrushedMotor motor{motor_options};

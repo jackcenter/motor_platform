@@ -4,9 +4,9 @@
 #include <tuple>
 
 #include "../types/status.h"
-
 namespace actuators {
 struct BrushedMotorOptions {
+  double voltage_multiplier{0.0};  // Allows user to change direction of rotation
   std::pair<double, double> voltage_range{0.0, 0.0};
 };
 
