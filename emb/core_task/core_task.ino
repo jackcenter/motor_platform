@@ -14,6 +14,7 @@
 #include "src/config/hardware_config.h"
 #include "src/config/platform_config.h"
 #include "src/hardware/tb6612fng.h"
+#include "src/hardware/button.h"
 #include "src/types/common.h"
 #include "src/types/status.h"
 #include "src/types/timestamp.h"
@@ -57,7 +58,18 @@ int main() {
 
   applications::TeleopOptions teleop_options{};
   applications::Teleop teleop_application{platform, controller, state_estimation, teleop_options};
-  teleop_application.open();
+
+  hardware::ButtonOptions red_button_options{};
+  red_button_options.debounce_delay_ms = 50;
+  red_button_options.pin = 2;
+  red_button_options.trigger = hardware::SignalState::kRising;
+  hardware::Button red_button{red_button_options};
+
+  hardware::ButtonOptions black_button_options{};
+  black_button_options.debounce_delay_ms = 50;
+  black_button_options.pin = 3;
+  black_button_options.trigger = hardware::SignalState::kRising;
+  hardware::Button black_button{black_button_options};
 
   Serial.begin(9600);
 
@@ -77,6 +89,16 @@ int main() {
 
     const types::Input input_update{teleop_application.read()};
     tb6612fng.write(types::Channel::B, input_update.voltage);
+
+    if(red_button())
+    {
+      teleop_application.close();
+    }
+
+    if(black_button())
+    {
+      teleop_application.open();
+    }
 
     applications::TeleopState teleop_state{teleop_application.getState()};
 
