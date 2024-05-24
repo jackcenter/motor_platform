@@ -41,7 +41,7 @@ types::Input Controller::cycle(const double reference, const types::State& state
     is_initialized = true;
   }
 
-  const double error_rad = state.joint_1_position_rad - reference;
+  const double error_rad = reference - state.joint_1_position_rad;
   const double proportional_input = options_.proportional_gain * error_rad;
 
   types::Input input;

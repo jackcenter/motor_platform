@@ -3,8 +3,8 @@
 namespace config {
 PinAssignment loadPinAssignment() {
   PinAssignment pin_assignment;
-  pin_assignment.encoder_1_a_pin = 8;
-  pin_assignment.encoder_1_b_pin = 9;
+  pin_assignment.encoder_1_a_pin = 9;
+  pin_assignment.encoder_1_b_pin = 8;
   pin_assignment.encoder_2_a_pin = 10;
   pin_assignment.encoder_2_b_pin = 11;
   pin_assignment.led_pin = 13;

@@ -27,7 +27,7 @@ types::Status BrushedMotor::open() {
   }
 
   active_ = true;
-  const types::Status write_status{write(0)};
+  const types::Status write_status{write(0.0)};
   return write_status;
 }
 
@@ -39,7 +39,7 @@ types::Status BrushedMotor::write(const double input) {
   if (!utilities::isInRange(input, options_.voltage_range.first, options_.voltage_range.second)) {
     return types::Status::OUT_OF_RANGE;
   }
-  input_ = input;
+  input_ = options_.voltage_multiplier * input;
 
   return types::Status::OKAY;
 }

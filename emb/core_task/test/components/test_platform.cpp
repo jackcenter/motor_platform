@@ -21,6 +21,7 @@ Platform getDefaultPlatform() {
   const interfaces::SensorInterface sensor_interface{encoder_1, encoder_2, sensor_interface_options};
 
   actuators::BrushedMotorOptions motor_options{};
+  motor_options.voltage_multiplier = 1.0;
   motor_options.voltage_range.first = -5.0;
   motor_options.voltage_range.second = 5.0;
   const actuators::BrushedMotor motor{motor_options};
