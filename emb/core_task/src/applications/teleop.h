@@ -1,6 +1,7 @@
 #ifndef APPLICATIONS_TELEOP_H
 #define APPLICATIONS_TELEOP_H
 
+#include "../components/controller.h"
 #include "../components/platform.h"
 #include "../components/state_estimation.h"
 #include "../types/input.h"
@@ -20,20 +21,18 @@ bool operator==(const TeleopState& lhs, const TeleopState& rhs);
 
 bool operator!=(const TeleopState& lhs, const TeleopState& rhs);
 
-struct TeleopOptions {
-  double gain = 0.0;
-};
+struct TeleopOptions {};
 
 bool operator==(const TeleopOptions& lhs, const TeleopOptions& rhs);
 
 class Teleop {
  public:
-  explicit Teleop(const components::Platform& platform_interface, const components::StateEstimation& state_estimation,
-                  const TeleopOptions& options);
+  Teleop(const components::Platform& platform_interface, const components::Controller& controller,
+         const components::StateEstimation& state_estimation, const TeleopOptions& options);
 
+  types::Status open();
   types::Status close();
   types::Status cycle(const types::Timestamp& timestamp);
-  types::Status open();
   types::Status write(const types::Measurement& measurement);
 
   const TeleopOptions& getOptions() const;
@@ -44,6 +43,7 @@ class Teleop {
 
  private:
   components::Platform platform_;
+  components::Controller controller_;
   components::StateEstimation state_estimation_;
   TeleopState state_;
   TeleopOptions options_;

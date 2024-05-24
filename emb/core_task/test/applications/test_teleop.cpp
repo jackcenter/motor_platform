@@ -3,6 +3,7 @@
 #include <ArduinoJson.h>
 #include <gtest/gtest.h>
 
+#include "../../src/components/controller.h"
 #include "../../src/components/platform.h"
 #include "../../src/components/platform_json_provider.h"
 #include "../../src/components/state_estimation.h"
@@ -18,16 +19,19 @@ Teleop getDefualtTelop() {
   components::PlatformJsonProvider platform_json_provider{};
   components::Platform platform{platform_json_provider.provide(config)};
 
+  components::ControllerOptions controller_options{};
+  controller_options.proportional_gain = 1.0;
+  controller_options.integral_gain = 0.2;
+  controller_options.derivative_gain = 0.3;
+  components::Controller controller{controller_options};
+
   components::StateEstimationOptions state_estimation_options{};
   state_estimation_options.joint_1_rad_per_count = 0.1;
   state_estimation_options.joint_2_rad_per_count = 0.2;
-
   components::StateEstimation state_estimation{state_estimation_options};
 
   TeleopOptions options{};
-  options.gain = 1.0;
-
-  return Teleop{platform, state_estimation, options};
+  return Teleop{platform, controller, state_estimation, options};
 }
 
 types::Measurement getDefualtMeasurement() {
@@ -58,9 +62,8 @@ TEST(Teleop, CycleProvidesCorretInput) {
   ASSERT_EQ(types::Status::OKAY, teleop_application.cycle(timestamp));
 
   const types::State state{teleop_application.getState().state};
-  const types::Measurement measurement{ teleop_application.getState().measurement};
+  const types::Measurement measurement{teleop_application.getState().measurement};
   EXPECT_NE(TeleopState{}, teleop_application.getState());
-  EXPECT_NE(0.0, teleop_application.read().voltage) << state.joint_1_position_rad << " " << state.joint_2_position_rad
-    << " " << measurement.encoder_1_pos << " " << measurement.encoder_2_pos;
+  EXPECT_NE(0.0, teleop_application.read().voltage);
 }
 }  // namespace applications
