@@ -17,6 +17,7 @@ include_directories(emb/core_task/src)
 add_library(${PROJECT_NAME}_lib 
   emb/core_task/src/actuators/brushed_motor.cpp
   emb/core_task/src/applications/teleop.cpp
+  emb/core_task/src/components/controller.cpp
   emb/core_task/src/components/platform.cpp
   emb/core_task/src/components/platform_json_provider.cpp
   emb/core_task/src/components/state_estimation.cpp
@@ -50,6 +51,7 @@ endfunction()
 
 add_project_gtest(emb/core_task/test/actuators test_brushed_motor)
 add_project_gtest(emb/core_task/test/applications test_teleop)
+add_project_gtest(emb/core_task/test/components test_controller)
 add_project_gtest(emb/core_task/test/components test_platform)
 add_project_gtest(emb/core_task/test/components test_state_estimation)
 add_project_gtest(emb/core_task/test/interfaces test_actuator_interface)
