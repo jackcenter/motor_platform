@@ -6,6 +6,7 @@
 #include "../types/state.h"
 #include "../types/status.h"
 #include "../types/timestamp.h"
+#include "../utilities/common.h"
 
 namespace components {
 bool operator==(const ControllerOptions& lhs, const ControllerOptions& rhs) {
@@ -26,6 +27,7 @@ types::Status Controller::deactivate() {
 }
 
 types::Status Controller::initialize() {
+  error_sum_rad_ = 0.0;
   is_initialized = true;
   return types::Status::OKAY;
 }
@@ -41,12 +43,37 @@ types::Input Controller::cycle(const double reference, const types::State& state
     is_initialized = true;
   }
 
+  // proportional
   const double error_rad = reference - state.joint_1_position_rad;
   const double proportional_input = options_.proportional_gain * error_rad;
 
+  // integral
+  double error_sum_rad = error_sum_rad_ + error_rad * options_.cycle_period_ms;
+  double integral_input = options_.integral_gain * error_sum_rad;
+
+  // derivative
+  const double previous_error_rad = error_rad_;
+  const double error_rate_rps = (error_rad - previous_error_rad) * options_.cycle_period_ms;
+  const double derivative_input = options_.derivative_gain * error_rate_rps;
+
+  // check for wind up
+  double proposed_input{proportional_input + integral_input - derivative_input};
+  if (!utilities::isInRange(proposed_input, options_.input_range.first, options_.input_range.second) &&
+      utilities::getSign(proposed_input) == utilities::getSign(error_rad)) {
+    error_sum_rad = error_sum_rad_;
+    integral_input = options_.integral_gain * error_sum_rad;
+  }
+
+  const double desired_input{proportional_input + integral_input + derivative_input};
+  const double input_value{
+      utilities::clamp<double>(desired_input, options_.input_range.first, options_.input_range.second)};
+
+  error_rad_ = error_rad;
+  error_sum_rad_ = error_sum_rad;
+
   types::Input input;
   input.header.timestamp = timestamp;
-  input.voltage = proportional_input;
+  input.voltage = input_value;
 
   return input;
 }
@@ -64,5 +91,4 @@ types::Input Controller::getInputToDisableControl(const types::Timestamp& timest
 }
 
 bool operator==(const Controller& lhs, const Controller& rhs) { return lhs.getOptions() == rhs.getOptions(); }
-
 }  // namespace components

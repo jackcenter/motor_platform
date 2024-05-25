@@ -3,6 +3,19 @@
 
 namespace utilities {
 template <typename Scalar>
+Scalar clamp(Scalar val, Scalar min, Scalar max) {
+  if (val < min) {
+    return min;
+  }
+
+  if (max < val) {
+    return max;
+  }
+
+  return val;
+}
+
+template <typename Scalar>
 int getSign(Scalar val) {
   return (static_cast<Scalar>(0) < val) - (val < static_cast<Scalar>(0));
 }

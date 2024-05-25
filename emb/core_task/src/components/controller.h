@@ -1,6 +1,8 @@
 #ifndef COMPONENTS_CONTROLLER_H
 #define COMPONENTS_CONTROLLER_H
 
+#include <tuple>
+
 #include "../types/input.h"
 #include "../types/state.h"
 #include "../types/status.h"
@@ -8,9 +10,11 @@
 
 namespace components {
 struct ControllerOptions {
-  double proportional_gain;
-  double integral_gain;
-  double derivative_gain;
+  double proportional_gain = 0.0;
+  double integral_gain = 0.0;
+  double derivative_gain = 0.0;
+  double cycle_period_ms = 0.0;
+  std::pair<double, double> input_range{0.0, 0.0};
 };
 
 bool operator==(const ControllerOptions& lhs, const ControllerOptions& rhs);
@@ -36,6 +40,8 @@ class Controller {
 
   bool is_active_ = false;
   bool is_initialized = false;
+  double error_rad_ = 0.0;
+  double error_sum_rad_ = 0.0;
 };
 
 bool operator==(const Controller& lhs, const Controller& rhs);

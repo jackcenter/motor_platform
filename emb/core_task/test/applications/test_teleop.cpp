@@ -23,6 +23,8 @@ Teleop getDefualtTelop() {
   controller_options.proportional_gain = 1.0;
   controller_options.integral_gain = 0.2;
   controller_options.derivative_gain = 0.3;
+  controller_options.cycle_period_ms = 2;
+  controller_options.input_range = {-5.0, 5.0};
   components::Controller controller{controller_options};
 
   components::StateEstimationOptions state_estimation_options{};
