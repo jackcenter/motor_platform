@@ -12,6 +12,8 @@ Controller getDefaultController() {
   options.proportional_gain = 1.0;
   options.integral_gain = 2.0;
   options.derivative_gain = 3.0;
+  options.cycle_period_ms = 2;
+  options.input_range = {-5.0, 5.0};
 
   return Controller{options};
 }

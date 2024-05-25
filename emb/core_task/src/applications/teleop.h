@@ -39,6 +39,8 @@ class Teleop {
   const components::Platform& getPlatform() const;
   const TeleopState& getState() const;
   const components::StateEstimation& getStateEstimation() const;
+  const bool isActive() const;
+
   const types::Input read() const;
 
  private:
@@ -47,6 +49,8 @@ class Teleop {
   components::StateEstimation state_estimation_;
   TeleopState state_;
   TeleopOptions options_;
+
+  bool is_active_ = false;
 };
 
 bool operator==(const Teleop& lhs, const Teleop& rhs);

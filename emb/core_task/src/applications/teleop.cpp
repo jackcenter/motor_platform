@@ -45,6 +45,7 @@ types::Status Teleop::open() {
     return state_estimation_status;
   }
 
+  is_active_ = true;
   return types::Status::OKAY;
 }
 
@@ -68,11 +69,16 @@ types::Status Teleop::close() {
     return types::Status::UNKNOWN;
   }
 
+  is_active_ = false;
   return types::Status::OKAY;
 }
 
 // cppcheck-suppress unusedFunction
 types::Status Teleop::cycle(const types::Timestamp& timestamp) {
+  if (!isActive()) {
+    return types::Status::UNAVAILABLE;
+  }
+
   const types::Measurement measurement{platform_.readMeasurement(timestamp)};
 
   state_estimation_.write(measurement);
@@ -102,6 +108,8 @@ const components::Platform& Teleop::getPlatform() const { return platform_; }
 const TeleopState& Teleop::getState() const { return state_; }
 
 const components::StateEstimation& Teleop::getStateEstimation() const { return state_estimation_; }
+
+const bool Teleop::isActive() const { return is_active_; };
 
 const types::Input Teleop::read() const { return platform_.readInput(); };
 

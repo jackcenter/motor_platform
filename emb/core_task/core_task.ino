@@ -20,7 +20,14 @@
 #include "src/types/timestamp.h"
 #include "src/utilities/serialize.h"
 
+volatile bool PRINT_FLAG{false};
+
 int main() {
+  const unsigned long control_cycle_period_ms{20};
+
+  IntervalTimer print_timer;
+  print_timer.begin(setPrintFlag, 1e5);
+
   config::PinAssignment pin_assignment{config::loadPinAssignment()};
   Encoder encoder_1{pin_assignment.encoder_1_a_pin, pin_assignment.encoder_1_b_pin};
   Encoder encoder_2{pin_assignment.encoder_2_a_pin, pin_assignment.encoder_2_b_pin};
@@ -47,8 +54,10 @@ int main() {
 
   components::ControllerOptions controller_options{};
   controller_options.proportional_gain = 1.0;
-  controller_options.integral_gain = 0.0;
-  controller_options.derivative_gain = 0.0;
+  controller_options.integral_gain = 0.01;
+  controller_options.derivative_gain = 0.5;
+  controller_options.cycle_period_ms = control_cycle_period_ms;
+  controller_options.input_range = {-5.0, 5.0};
   components::Controller controller{controller_options};
 
   components::StateEstimationOptions state_estimation_options{};
@@ -74,53 +83,61 @@ int main() {
   Serial.begin(9600);
 
   for (;;) {
+    types::Timestamp cycle_start_timestamp{micros()};
     digitalWrite(pin_assignment.led_pin, led_level);
     led_level = led_level ? false : true;
-
-    types::Timestamp current_timestamp{micros()};
 
     types::Measurement measurement_update;
     measurement_update.encoder_1_pos = encoder_1.read();
     measurement_update.encoder_2_pos = encoder_2.read();
-    measurement_update.header.timestamp = current_timestamp;
+    measurement_update.header.timestamp = cycle_start_timestamp;
 
     teleop_application.write(measurement_update);
-    teleop_application.cycle(current_timestamp);
 
-    const types::Input input_update{teleop_application.read()};
-    tb6612fng.write(types::Channel::B, input_update.voltage);
-
-    if(red_button())
-    {
+    if (red_button() && teleop_application.isActive()) {
       teleop_application.close();
     }
 
-    if(black_button())
-    {
+    if (black_button() && !teleop_application.isActive()) {
       teleop_application.open();
     }
 
-    applications::TeleopState teleop_state{teleop_application.getState()};
+    teleop_application.cycle(cycle_start_timestamp);
+    const types::Input input_update{teleop_application.read()};
 
-    JsonDocument doc1{};
-    doc1["input"] = utilities::serialize(teleop_state.input);
-    serializeJson(doc1, Serial);
-    Serial.println();
+    tb6612fng.write(types::Channel::B, input_update.voltage);
 
-    JsonDocument doc2{};
-    doc2["measurement"] = utilities::serialize(teleop_state.measurement);
-    serializeJson(doc2, Serial);
-    Serial.println();
+    if (PRINT_FLAG && teleop_application.isActive()) {
+      applications::TeleopState teleop_state{teleop_application.getState()};
 
-    JsonDocument doc3{};
-    doc3["state"] = utilities::serialize(teleop_state.state);
-    serializeJson(doc3, Serial);
-    Serial.println();
+      JsonDocument doc1{};
+      doc1["input"] = utilities::serialize(teleop_state.input);
+      serializeJson(doc1, Serial);
+      Serial.println();
 
-    delay(20);
+      JsonDocument doc2{};
+      doc2["measurement"] = utilities::serialize(teleop_state.measurement);
+      serializeJson(doc2, Serial);
+      Serial.println();
+
+      JsonDocument doc3{};
+      doc3["state"] = utilities::serialize(teleop_state.state);
+      serializeJson(doc3, Serial);
+      Serial.println();
+
+      PRINT_FLAG = false;
+    }
+
+    const unsigned long current_cycle_duration_ms{micros() - cycle_start_timestamp.microseconds};
+    if (current_cycle_duration_ms < control_cycle_period_ms) {
+      const unsigned long cycle_time_remaining_ms{control_cycle_period_ms - current_cycle_duration_ms};
+      delay(cycle_time_remaining_ms);
+    }
 
     yield();
   }
 
   return 0;
 }
+
+void setPrintFlag() { PRINT_FLAG = true; }
