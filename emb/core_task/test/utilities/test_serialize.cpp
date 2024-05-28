@@ -21,7 +21,7 @@ types::Header getDefaultHeader() {
 
 TEST(SerializeHeader, ContainsExpectedData) {
   const types::Header header{getDefaultHeader()};
-  DynamicJsonDocument result{serialize(header)};
+  const JsonDocument result{serialize(header)};
 
   EXPECT_TRUE(result["sequence"] == header.sequence);
   EXPECT_TRUE(result["timestamp"]["microseconds"] == header.timestamp.microseconds);
@@ -32,7 +32,7 @@ TEST(SerializeInput, ContainsExpectedData) {
   input.header = getDefaultHeader();
   input.voltage = 0.1;
 
-  DynamicJsonDocument result{serialize(input)};
+  const JsonDocument result{serialize(input)};
 
   EXPECT_TRUE(result["voltage"] == input.voltage);
   EXPECT_TRUE(result["header"]["sequence"] == input.header.sequence);
@@ -45,7 +45,7 @@ TEST(SerializeMeasurement, ContainsExpectedData) {
   measurement.encoder_1_pos = 1;
   measurement.encoder_2_pos = 2;
 
-  DynamicJsonDocument result{serialize(measurement)};
+  const JsonDocument result{serialize(measurement)};
 
   EXPECT_TRUE(result["encoder_1_pos"] == measurement.encoder_1_pos);
   EXPECT_TRUE(result["encoder_2_pos"] == measurement.encoder_2_pos);
@@ -61,7 +61,7 @@ state.joint_1_velocity_rps = 1.2;
 state.joint_2_position_rad = 2.3;
 state.joint_2_velocity_rps = 3.4;
 
-DynamicJsonDocument result{serialize(state)};
+const JsonDocument result{serialize(state)};
 
 EXPECT_TRUE(result["joint_1_position_rad"] == state.joint_1_position_rad);
 EXPECT_TRUE(result["joint_1_velocity_rps"] == state.joint_1_velocity_rps);
@@ -75,7 +75,7 @@ TEST(SerializeTimestamp, ContainsExpectedData) {
   types::Timestamp timestamp{};
   timestamp.microseconds = 1;
 
-  DynamicJsonDocument result{serialize(timestamp)};
+  const JsonDocument result{serialize(timestamp)};
 
   EXPECT_TRUE(result["microseconds"] == timestamp.microseconds);
 }

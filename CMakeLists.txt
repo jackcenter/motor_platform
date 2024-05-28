@@ -9,7 +9,7 @@ include(CTest)
 include(FetchContent)
 FetchContent_Declare(ArduinoJson
     GIT_REPOSITORY https://github.com/bblanchon/ArduinoJson.git
-    GIT_TAG        v6.21.5
+    GIT_TAG        v7.0.4
 )
 FetchContent_MakeAvailable(ArduinoJson)
 
@@ -18,10 +18,13 @@ add_library(${PROJECT_NAME}_lib
   emb/core_task/src/actuators/brushed_motor.cpp
   emb/core_task/src/applications/teleop.cpp
   emb/core_task/src/components/controller.cpp
+  emb/core_task/src/components/controller_json_provider.cpp
   emb/core_task/src/components/platform.cpp
   emb/core_task/src/components/platform_json_provider.cpp
   emb/core_task/src/components/state_estimation.cpp
-  emb/core_task/src/config/platform_config.cpp
+  emb/core_task/src/components/state_estimation_json_provider.cpp
+  emb/core_task/src/config/hardware_config.cpp
+  emb/core_task/src/config/teleop_config.cpp
   emb/core_task/src/interfaces/actuator_interface.cpp
   emb/core_task/src/interfaces/sensor_interface.cpp
   emb/core_task/src/sensors/quadrature_encoder.cpp
@@ -52,8 +55,11 @@ endfunction()
 add_project_gtest(emb/core_task/test/actuators test_brushed_motor)
 add_project_gtest(emb/core_task/test/applications test_teleop)
 add_project_gtest(emb/core_task/test/components test_controller)
+add_project_gtest(emb/core_task/test/components test_controller_json_provider)
 add_project_gtest(emb/core_task/test/components test_platform)
+add_project_gtest(emb/core_task/test/components test_platform_json_provider)
 add_project_gtest(emb/core_task/test/components test_state_estimation)
+add_project_gtest(emb/core_task/test/components test_state_estimation_json_provider)
 add_project_gtest(emb/core_task/test/interfaces test_actuator_interface)
 add_project_gtest(emb/core_task/test/interfaces test_sensor_interface)
 add_project_gtest(emb/core_task/test/sensors test_quadrature_encoder)

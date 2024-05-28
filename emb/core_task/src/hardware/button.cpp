@@ -6,7 +6,7 @@ namespace hardware {
 Button::Button(const ButtonOptions& options) : options_{options} {
   pinMode(options_.pin, INPUT_PULLUP);
   measurement_ = read();
-  state_ = measurement_.reading ? SignalState::kHigh : SignalState::kLow;
+  state_ = measurement_.reading ? SignalState::high : SignalState::low;
 }
 
 bool Button::operator()() {
@@ -37,28 +37,28 @@ ButtonMeasurement Button::read() const {
 }
 
 void Button::updateTransientState(const SignalState& state) {
-  if (state == SignalState::kRising) {
-    state_ = SignalState::kHigh;
+  if (state == SignalState::rising) {
+    state_ = SignalState::high;
   }
 
-  if (state == SignalState::kFalling) {
-    state_ = SignalState::kLow;
+  if (state == SignalState::falling) {
+    state_ = SignalState::low;
   }
 }
 
 SignalState Button::determineState(const ButtonMeasurement& measurement, const SignalState& state) const {
   const bool isButtonPressed{measurement.reading == 1};
   switch (state) {
-    case SignalState::kLow:
-      return isButtonPressed ? SignalState::kRising : SignalState::kLow;
-    case SignalState::kHigh:
-      return isButtonPressed ? SignalState::kHigh : SignalState::kFalling;
-    case SignalState::kRising:
-      return isButtonPressed ? SignalState::kHigh : SignalState::kFalling;
-    case SignalState::kFalling:
-      return isButtonPressed ? SignalState::kRising : SignalState::kLow;
+    case SignalState::low:
+      return isButtonPressed ? SignalState::rising : SignalState::low;
+    case SignalState::high:
+      return isButtonPressed ? SignalState::high : SignalState::falling;
+    case SignalState::rising:
+      return isButtonPressed ? SignalState::high : SignalState::falling;
+    case SignalState::falling:
+      return isButtonPressed ? SignalState::rising : SignalState::low;
     default:
-      return SignalState::kLow;
+      return SignalState::low;
       // TODO: Throw an error, all GateStates should be handled above.
   }
 }

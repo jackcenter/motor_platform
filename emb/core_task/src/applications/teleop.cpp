@@ -80,20 +80,19 @@ types::Status Teleop::cycle(const types::Timestamp& timestamp) {
   }
 
   const types::Measurement measurement{platform_.readMeasurement(timestamp)};
+  state_.measurement = measurement;
 
   state_estimation_.write(measurement);
   const types::State state{state_estimation_.read()};
+  state_.state = state;
 
   const double reference{state.joint_2_position_rad};
   const types::Input input{controller_.cycle(reference, state, timestamp)};
+  state_.input = input;
   const types::Status result{platform_.write(input)};
   if (result != types::Status::OKAY) {
     return result;
   }
-
-  state_.input = input;
-  state_.measurement = measurement;
-  state_.state = state;
 
   return types::Status::OKAY;
 }

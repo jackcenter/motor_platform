@@ -1,8 +1,16 @@
 #ifndef HARDWARE_BUTTON_H
 #define HARDWARE_BUTTON_H
 
+#include <string>
+#include <unordered_map>
+
 namespace hardware {
-enum class SignalState { kLow, kHigh, kRising, kFalling };
+enum class SignalState { low, high, rising, falling };
+
+const std::unordered_map<std::string, SignalState> signal_state_map{{"low", SignalState::low},
+                                                                    {"high", SignalState::high},
+                                                                    {"rising", SignalState::rising},
+                                                                    {"falling", SignalState::falling}};
 
 struct ButtonMeasurement {
   unsigned long time_ms = 0;
@@ -12,7 +20,7 @@ struct ButtonMeasurement {
 struct ButtonOptions {
   unsigned long debounce_delay_ms = 0;
   int pin = 0;
-  SignalState trigger = SignalState::kFalling;
+  SignalState trigger = SignalState::falling;
 };
 
 class Button {
@@ -28,7 +36,7 @@ class Button {
   SignalState determineState(const ButtonMeasurement&, const SignalState& state) const;
 
   ButtonMeasurement measurement_{};
-  SignalState state_ = SignalState::kLow;
+  SignalState state_ = SignalState::low;
   unsigned long debounce_time_ms_ = 0;
 
   ButtonOptions options_;
