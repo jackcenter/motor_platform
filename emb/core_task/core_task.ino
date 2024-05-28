@@ -23,7 +23,7 @@
 volatile bool PRINT_FLAG{false};
 
 int main() {
-  const unsigned long control_cycle_period_ms{20};
+  const unsigned long control_cycle_period_ms{2};
 
   IntervalTimer print_timer;
   print_timer.begin(setPrintFlag, 1e5);
@@ -129,8 +129,8 @@ int main() {
       PRINT_FLAG = false;
     }
 
-    const unsigned long current_cycle_duration_ms{micros() - cycle_start_timestamp.microseconds};
-    if (current_cycle_duration_ms < control_cycle_period_ms) {
+    const unsigned long current_cycle_duration_ms{millis() - cycle_start_timestamp.toMilliseconds()};
+    if ((current_cycle_duration_ms) < control_cycle_period_ms) {
       const unsigned long cycle_time_remaining_ms{control_cycle_period_ms - current_cycle_duration_ms};
       delay(cycle_time_remaining_ms);
     }
