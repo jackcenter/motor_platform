@@ -10,8 +10,10 @@
 
 namespace components {
 bool operator==(const ControllerOptions& lhs, const ControllerOptions& rhs) {
-  return std::make_tuple(lhs.proportional_gain, lhs.integral_gain, lhs.derivative_gain) ==
-         std::make_tuple(rhs.proportional_gain, rhs.integral_gain, rhs.derivative_gain);
+  return std::make_tuple(lhs.proportional_gain, lhs.integral_gain, lhs.derivative_gain, lhs.cycle_period_ms,
+                         lhs.input_range, lhs.deadband_range) ==
+         std::make_tuple(rhs.proportional_gain, rhs.integral_gain, rhs.derivative_gain, rhs.cycle_period_ms,
+                         rhs.input_range, rhs.deadband_range);
 }
 
 Controller::Controller(const ControllerOptions& options) : options_{options} {}
@@ -48,12 +50,17 @@ types::Input Controller::cycle(const double reference, const types::State& state
   const double proportional_input = options_.proportional_gain * error_rad;
 
   // integral
-  double error_sum_rad = error_sum_rad_ + error_rad * options_.cycle_period_ms;
+  double error_sum_rad = error_sum_rad_;
+
+  // check deadband
+  if (!utilities::isInRange(error_rad, options_.deadband_range.first, options_.deadband_range.second)) {
+    error_sum_rad += error_rad * (1e-3 * options_.cycle_period_ms);
+  }
   double integral_input = options_.integral_gain * error_sum_rad;
 
   // derivative
   const double previous_error_rad = error_rad_;
-  const double error_rate_rps = (error_rad - previous_error_rad) * options_.cycle_period_ms;
+  const double error_rate_rps = (error_rad - previous_error_rad) * (1e-3 * options_.cycle_period_ms);
   const double derivative_input = options_.derivative_gain * error_rate_rps;
 
   // check for wind up

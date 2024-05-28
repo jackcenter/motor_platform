@@ -14,7 +14,8 @@ struct ControllerOptions {
   double integral_gain = 0.0;
   double derivative_gain = 0.0;
   double cycle_period_ms = 0.0;
-  std::pair<double, double> input_range{0.0, 0.0};
+  std::pair<double, double> input_range = {0.0, 0.0};
+  std::pair<double, double> deadband_range = {0.0, 0.0};
 };
 
 bool operator==(const ControllerOptions& lhs, const ControllerOptions& rhs);
