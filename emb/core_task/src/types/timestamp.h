@@ -5,7 +5,7 @@ namespace types {
 struct Timestamp {
   unsigned long int microseconds = 0;
 
-  double toMilliseconds() const;
+  unsigned long toMilliseconds() const;
   double toSec() const;
 };
 
