@@ -1,7 +1,9 @@
 #include "timestamp.h"
 
 namespace types {
-double Timestamp::toMilliseconds() const { return 1e-3 * static_cast<double>(microseconds); }
+unsigned long Timestamp::toMilliseconds() const {
+  return static_cast<unsigned long>(1e-3 * static_cast<double>(microseconds));
+}
 
 double Timestamp::toSec() const { return 1e-6 * static_cast<double>(microseconds); }
 
