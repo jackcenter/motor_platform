@@ -25,6 +25,7 @@ Teleop getDefualtTelop() {
   controller_options.derivative_gain = 0.3;
   controller_options.cycle_period_ms = 2;
   controller_options.input_range = {-5.0, 5.0};
+  controller_options.deadband_range = {-0.02, 0.02};
   components::Controller controller{controller_options};
 
   components::StateEstimationOptions state_estimation_options{};

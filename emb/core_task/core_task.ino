@@ -53,11 +53,12 @@ int main() {
   components::Platform platform{platform_json_provider.provide(config)};
 
   components::ControllerOptions controller_options{};
-  controller_options.proportional_gain = 1.0;
+  controller_options.proportional_gain = 4.0;
   controller_options.integral_gain = 0.01;
-  controller_options.derivative_gain = 0.5;
+  controller_options.derivative_gain = 0.0;
   controller_options.cycle_period_ms = control_cycle_period_ms;
   controller_options.input_range = {-5.0, 5.0};
+  controller_options.deadband_range = {-0.02, 0.02};
   components::Controller controller{controller_options};
 
   components::StateEstimationOptions state_estimation_options{};
@@ -108,7 +109,7 @@ int main() {
     tb6612fng.write(types::Channel::B, input_update.voltage);
 
     if (PRINT_FLAG && teleop_application.isActive()) {
-      applications::TeleopState teleop_state{teleop_application.getState()};
+      const applications::TeleopState teleop_state{teleop_application.getState()};
 
       JsonDocument doc1{};
       doc1["input"] = utilities::serialize(teleop_state.input);
