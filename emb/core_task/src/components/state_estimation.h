@@ -8,8 +8,8 @@
 
 namespace components {
 struct StateEstimationOptions {
-  double joint_1_rad_per_count;
-  double joint_2_rad_per_count;
+  long joint_1_counts_per_revolution;
+  long joint_2_counts_per_revolution;
 };
 
 bool operator==(const StateEstimationOptions& lhs, const StateEstimationOptions& rhs);
@@ -36,6 +36,8 @@ class StateEstimation {
 
   types::State state_;
   StateEstimationOptions options_;
+  double joint_1_rad_per_count_;
+  double joint_2_rad_per_count_;
 
   bool is_active_ = false;
   bool is_initialized_ = false;

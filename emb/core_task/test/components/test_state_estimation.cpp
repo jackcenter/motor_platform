@@ -1,5 +1,7 @@
 #include "../../src/components/state_estimation.h"
 
+#include <cmath>
+
 #include <gtest/gtest.h>
 
 #include "../../src/types/measurement.h"
@@ -8,15 +10,13 @@
 namespace components {
 StateEstimationOptions getDefaultStateEstimationOptions() {
   StateEstimationOptions state_estimation_options;
-  state_estimation_options.joint_1_rad_per_count = 0.1;
-  state_estimation_options.joint_2_rad_per_count = 0.2;
+  state_estimation_options.joint_1_counts_per_revolution = 100;
+  state_estimation_options.joint_2_counts_per_revolution = 200;
 
   return state_estimation_options;
 }
 
-StateEstimation getDefaultStateEstimation() {
-  return StateEstimation{getDefaultStateEstimationOptions()};
-}
+StateEstimation getDefaultStateEstimation() { return StateEstimation{getDefaultStateEstimationOptions()}; }
 
 TEST(StateEstimation, Construction) {
   StateEstimation state_estimation{getDefaultStateEstimation()};
@@ -66,10 +66,10 @@ TEST(StateEstimation, InitializesCorrectly) {
   expected_state.header.sequence = 0;
   expected_state.header.timestamp = measurement.header.timestamp;
   expected_state.joint_1_position_rad =
-      state_estimation.getOptions().joint_1_rad_per_count * measurement.encoder_1_pos;
+      (2.0 * M_PI) / state_estimation.getOptions().joint_1_counts_per_revolution * measurement.encoder_1_pos;
   expected_state.joint_1_velocity_rps = 0.0;
   expected_state.joint_2_position_rad =
-      state_estimation.getOptions().joint_2_rad_per_count * measurement.encoder_2_pos;
+      (2.0 * M_PI) / state_estimation.getOptions().joint_2_counts_per_revolution * measurement.encoder_2_pos;
   expected_state.joint_2_velocity_rps = 0.0;
   EXPECT_EQ(expected_state, state_estimation.read());
 }

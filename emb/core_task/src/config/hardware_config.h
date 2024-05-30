@@ -1,25 +1,10 @@
-#ifndef CORE_TASK_CONFIG_HARDWARE_CONFIG_H
-#define CORE_TASK_CONFIG_HARDWARE_CONFIG_H
+#ifndef CONFIG_HARDWARE_CONFIG
+#define CONFIG_HARDWARE_CONFIG
 
-#include <stdint.h>
-#include <utility>
+#include <ArduinoJson.h>
 
 namespace config {
-struct PinAssignment {
-  uint8_t encoder_1_a_pin;
-  uint8_t encoder_1_b_pin;
-  uint8_t encoder_2_a_pin;
-  uint8_t encoder_2_b_pin;
-  uint8_t led_pin;
-  uint8_t motor_b_pwm_pin;
-  uint8_t motor_b_input_1_pin;
-  uint8_t motor_b_input_2_pin;
-  uint8_t motor_standby_pin;
-  uint8_t motor_a_input_1_pin;
-  uint8_t motor_a_input_2_pin;
-  uint8_t motor_a_pwm_pin;
-};
+JsonDocument loadHardwareConfig();
+}
 
-PinAssignment loadPinAssignment();
-}  // namespace config
-#endif  // CORE_TASK_CONFIG_HARDWARE_CONFIG_H
+#endif  // CONFIG_HARDWARE_CONFIG

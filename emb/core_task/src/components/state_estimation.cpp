@@ -1,5 +1,6 @@
 #include "state_estimation.h"
 
+#include <cmath>
 #include <tuple>
 
 #include "../types/input.h"
@@ -10,9 +11,16 @@
 #include "../utilities/time.h"
 
 namespace components {
-bool operator==(const StateEstimationOptions& lhs, const StateEstimationOptions& rhs) { return true; }
+bool operator==(const StateEstimationOptions& lhs, const StateEstimationOptions& rhs) {
+  return std::make_tuple(lhs.joint_1_counts_per_revolution, lhs.joint_2_counts_per_revolution) ==
+         std::make_tuple(rhs.joint_1_counts_per_revolution, rhs.joint_2_counts_per_revolution);
+}
 
-StateEstimation::StateEstimation(const StateEstimationOptions& options) : state_{}, options_{options} {}
+StateEstimation::StateEstimation(const StateEstimationOptions& options)
+    : state_{},
+      options_{options},
+      joint_1_rad_per_count_{(2.0 * M_PI) / static_cast<double>(options_.joint_1_counts_per_revolution)},
+      joint_2_rad_per_count_{(2.0 * M_PI) / static_cast<double>(options_.joint_2_counts_per_revolution)} {}
 
 types::Status StateEstimation::open() {
   is_active_ = true;
@@ -45,11 +53,11 @@ types::Status StateEstimation::write(const types::Measurement& measurement) {
   types::State state{};
   state.header = measurement.header;
 
-  state.joint_1_position_rad = options_.joint_1_rad_per_count * measurement.encoder_1_pos;
+  state.joint_1_position_rad = joint_1_rad_per_count_ * measurement.encoder_1_pos;
   state.joint_1_velocity_rps = computeVelocity(state.joint_1_position_rad, previous_state.joint_1_position_rad,
                                                state.header.timestamp, previous_state.header.timestamp);
 
-  state.joint_2_position_rad = options_.joint_2_rad_per_count * measurement.encoder_2_pos;
+  state.joint_2_position_rad = joint_2_rad_per_count_ * measurement.encoder_2_pos;
   state.joint_2_velocity_rps = computeVelocity(state.joint_2_position_rad, previous_state.joint_2_position_rad,
                                                state.header.timestamp, previous_state.header.timestamp);
 
@@ -61,9 +69,9 @@ types::State StateEstimation::initializeState(const types::Measurement& measurem
   types::State state{};
   state.header.sequence = 0;
   state.header.timestamp = measurement.header.timestamp;
-  state.joint_1_position_rad = options_.joint_1_rad_per_count * measurement.encoder_1_pos;
+  state.joint_1_position_rad = joint_1_rad_per_count_ * measurement.encoder_1_pos;
   state.joint_1_velocity_rps = 0.0;
-  state.joint_2_position_rad = options_.joint_2_rad_per_count * measurement.encoder_2_pos;
+  state.joint_2_position_rad = joint_2_rad_per_count_ * measurement.encoder_2_pos;
   state.joint_2_velocity_rps = 0.0;
 
   return state;
